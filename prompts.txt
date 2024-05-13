@@ -1,0 +1,75 @@
+Contexto:
+Tengo un programa PHP Laravel ALEXM4 y tengo una Api Node.js conectada a Oracle BATTY.JS
+
+Necesito crear una página blade en ALEXM4 que muestre las ALTAS AGRUPADAS POR UOR
+
+
+
+http://localhost:3000/altas_agrupadas_por_uor/202301
+
+Ordenes:
+
+1) Escribir una función para un CONTROLLER que ya existe
+app\Http\Controllers\M4dashboardController.php
+
+Esta función se llamará 
+ShowAltasAgrupadas()
+
+Recibirá como argumento ( periodo ) : una cadena de 6 caracteres
+
+Si no recibe ningun argumento "periodo" asumirá por defecto el valor '202308'
+PERIODO ES la representación de un mes y año con el formato
+AAAAMMM
+
+
+ShowAltasAgrupadas() se conectará con el endpoint BATTY de ruta: 
+
+http://localhost:3000/altas_agrupadas_por_uor/202307
+Siendo 202307 un parámetro posible para PERIODO
+
+Los datos recibidos son por ejemplo:
+
+"rows": [
+{
+"UOR": "Dcción. de Educación Especial",
+"CANTIDAD": 1
+},
+{
+"UOR": "Instituto Provincial de la Vivienda",
+"CANTIDAD": 1
+},
+{
+"UOR": "Dcción. Gral. Obra Social de Emp. Pcos.",
+"CANTIDAD": 1
+},
+{
+"UOR": "Dcción.de Agricultura y Contingencias Clim",
+"CANTIDAD": 1
+},
+
+ShowAltasAgrupadas() deberá devolver los datos conseguidos en el endpoint
+y una vista blade.
+
+2) Escribe la vista blade de nombre:
+
+planta/showAltasAgrupadas.blade.php
+
+la vista muestra en formato de Tabla HTML con Bootstrap los datos recibidos.
+en columnas UOR y CANTIDAD
+
+3)
+
+Escribe la ruta Laravel para acceder al Controller y la función escritas.
+
+
+
+
+
+
+
+
+
+
+
+
+

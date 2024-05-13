@@ -1,0 +1,50 @@
+EXTENSION Project Links 
+KyleDavidE.vscode-project-links
+
+
+
+
+- R O U T E S - 
+
+project://routes\web.php
+
+-C O N T R O L L E R S -
+ 
+
+historialoperacionesController
+project://app\Http\Controllers\historialoperacionesController.php
+
+Consultas de tarjetas indicadores
+project://app\Http\Controllers\historialoperacionesController.php#227
+
+Controller GRAFICAR
+project://app\Http\Controllers\historialoperacionesController.php#166
+
+
+Layout App Principal
+
+project://resources\views\layouts\app.blade.php
+
+
+- V I S T A S -
+GRAFICOS
+project://resources\views\historialoperaciones\graficos.blade.php
+
+- M E N U -
+project://resources\views\layouts\menu.blade.php#0,0
+
+Login
+
+project://resources\views\auth\login.blade.php
+
+
+- D A S H B O A R D   D E L   U S U A R I O  - 
+ Route
+project://routes\web.php#30
+
+ controller
+project://app\Http\Controllers\historialoperacionesController.php#665
+
+
+project://app\Http\Controllers
+project://resources\views

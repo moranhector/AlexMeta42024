@@ -1,0 +1,285 @@
+
+.small-box {
+    text-align: center;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    color: #fff;
+}
+
+.small-box h3 {
+    font-size: 28px;
+    margin-top: 0;
+}
+
+.small-box p {
+    font-size: 14px;
+}
+
+/* Colores */
+.bg-planta {
+    background-color: #ff6b6b; /* Rojo anaranjado */
+}
+
+.bg-jubilaciones {
+    background-color: #72d572; /* Verde claro */
+}
+
+.bg-ausentismo {
+    background-color: #f9cb42; /* Amarillo */
+}
+
+.bg-altas {
+    background-color: #5499c7; /* Azul claro */
+}
+
+html,
+body,
+#containerb {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#div_generoxv {
+    width: 50%;
+    height: 50%;
+    margin: 0;
+    padding: 0;
+}
+
+#div_uor {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.tarjeta-container {
+    margin-top: 20px;
+    /* Puedes ajustar el valor según sea necesario */
+}
+
+/* Agrega este estilo CSS a tu hoja de estilos */
+.borde-superior {
+    border-top: 3px solid #3498db; /* Color celeste (#3498db) y grosor del borde */
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: block;
+    margin: 15px auto;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.loader::after,
+.loader::before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #008B8B;
+    width: 16px;
+    height: 16px;
+    transform: translate(-50%, 50%);
+    border-radius: 50%;
+}
+
+.loader::before {
+    left: auto;
+    right: 0;
+    background: #FFF;
+    transform: translate(50%, 100%);
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#myTable tbody tr td {
+    height: 30% !important;
+    font-size: 80% !important;
+}
+
+/* Estilos para la ventana modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    /* Habilitar la barra de desplazamiento */
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos para el contenido de la ventana modal */
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    /* Ubicación vertical, margen horizontal automático */
+    padding: 20px;
+    border: 1px solid #888;
+    /* max-width: calc(100% - 200px); */
+    /* Ancho máximo con márgenes izquierdo y derecho */
+    max-height: 90%;
+    /* Altura máxima para la ventana modal */
+    overflow-y: auto;
+    /* Habilitar la barra de desplazamiento vertical */
+}
+
+.modal-dialog {
+    max-width: 100%;
+  }
+
+
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th {
+    background-color: blue;
+    /* Color de fondo azul para las celdas de encabezado */
+    color: white;
+    /* Texto blanco para las celdas de encabezado */
+    padding: 8px;
+    text-align: left;
+}
+
+td {
+    padding: 8px;
+    text-align: left;
+}
+
+tfoot button {
+    background-color: blue;
+    /* Color de fondo azul para el botón */
+    color: white;
+    /* Texto blanco para el botón */
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+}
+
+tfoot button:hover {
+    background-color: #0044cc;
+    /* Cambio de color al pasar el cursor por encima */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estilo para la fila que contiene el botón de Excel */
+.excel-button-row th {
+    background-color: white;
+    /* Fondo blanco para la fila del botón de Excel */
+}
+
+.formulario {
+    max-width: 900px;
+    /* Ajusta el ancho máximo según tus preferencias */
+    margin: 0 auto;
+    /* Centra el formulario en la página */
+    padding: 20px;
+    /* Añade un poco de espacio alrededor del formulario */
+    background-color: #ffffff;
+    /* Color de fondo opcional */
+}
+
+.formulario label {
+    display: block;
+    /* Hace que las etiquetas se muestren en una nueva línea */
+    margin-bottom: 5px;
+    /* Añade espacio entre las etiquetas y los campos de entrada */
+}
+
+.formulario input {
+    width: 100%;
+    /* Hace que los campos de entrada ocupen todo el ancho disponible */
+    box-sizing: border-box;
+    /* Incluye el padding y el borde en el ancho total */
+    margin-bottom: 10px;
+    /* Añade espacio entre los campos de entrada */
+}
+
+.formulario button {
+    width: 100%;
+    /* Hace que el botón ocupe todo el ancho disponible */
+    box-sizing: border-box;
+    /* Incluye el padding y el borde en el ancho total */
+}
+
+#map {
+    height: 400px;
+    width: 900px;
+}
+
+/* Estilo para la tabla */
+#table_personas {
+    background-color: white;
+    /* Fondo blanco */
+    border-collapse: collapse;
+    /* Para asegurar que las celdas se fusionen correctamente */
+    width: 100%;
+}
+
+/* Estilo para las celdas */
+#table_personas th,
+#table_personas td {
+    border: 1px solid #ddd;
+    /* Línea gris fina entre celdas */
+    padding: 8px;
+    /* Espacio interno */
+    text-align: left;
+    /* Alineación del texto */
+}
+
+/* Estilo para los encabezados */
+#table_personas th {
+    background-color: #007bff;
+    /* Fondo azul */
+    color: white;
+    /* Texto negro */
+    font-weight: bold;
+    /* Texto en negrita */
+    border-bottom: 2px solid black;
+    /* Línea negra más gruesa en la parte inferior */
+}
+
+/* Estilo para el pie de tabla */
+#table_personas tfoot {
+    background-color: #007bff;
+    /* Fondo azul */
+    color: white;
+    /* Texto blanco */
+    font-weight: bold;
+    /* Texto en negrita */
+}
