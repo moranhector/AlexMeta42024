@@ -47,3 +47,9 @@
 </li>
 
 
+<li class="nav-item">
+    <a href="{{ route('futurosjubilados.index') }}" class="nav-link {{ Request::is('futurosjubilados') ? 'active' : '' }}">
+        <i class="fas fa-users"></i>
+        <p>Futuros Jubilados</p>
+    </a>
+</li>

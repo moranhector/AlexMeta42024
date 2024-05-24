@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/heatmap.js"></script>
 <script src="https://code.highcharts.com/modules/treemap.js"></script>
@@ -257,14 +258,15 @@
     });
 </script>
 
+<!-- language: {
+            url: 'http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json'
+        }, -->
+
 
 <script>
     // Inicialización del DataTable
     var dataTable = new DataTable('#table_personas', {
-        language: {
-            url: 'http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json'
-        },
-        searchDelay: 1000,
+        searchDelay: 500,
         ajax: SERVER_NODE + '/personas2',
         columns: [{
                 data: 'SCO_GB_NAME'
@@ -336,14 +338,23 @@
                     // Otros campos
                     // Muestra el formulario
                     document.getElementById('formulario').style.display = 'block';
-                    //DATOS DE DOMICILIO
-                    document.getElementById('domicilio').value = domicilio.DOMICILIO;
-                    document.getElementById('calle').value = domicilio.DOMI_CALLE;
-                    document.getElementById('numero').value = domicilio.DOMI_NUMERO;
-                    document.getElementById('lugar').value = domicilio.DOMI_LUGAR;
-                    document.getElementById('cp').value = domicilio.DOMI_CP;
-                    // SITUACION JUBILATORIA
 
+                    // Verificar si domicilio no es undefined
+                    if (domicilio !== undefined) {
+                        // DATOS DE DOMICILIO
+                        document.getElementById('domicilio').value = domicilio.DOMICILIO || '';
+                        document.getElementById('calle').value = domicilio.DOMI_CALLE || '';
+                        document.getElementById('numero').value = domicilio.DOMI_NUMERO || '';
+                        document.getElementById('lugar').value = domicilio.DOMI_LUGAR || '';
+                        document.getElementById('cp').value = domicilio.DOMI_CP || '';
+                    } else {
+                        // En caso de que domicilio sea undefined, puedes opcionalmente vaciar los campos
+                        document.getElementById('domicilio').value = '';
+                        document.getElementById('calle').value = '';
+                        document.getElementById('numero').value = '';
+                        document.getElementById('lugar').value = '';
+                        document.getElementById('cp').value = '';
+                    }
                     //var cadena = jubilacion.AJUB;
 
                     // Transformar a "SI" o "NO"

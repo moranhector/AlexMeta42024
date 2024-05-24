@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\FuturoJubiladoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -59,3 +59,13 @@ Route::get('/ShowAltas/{periodo?}', 'App\Http\Controllers\M4dashboardController@
 Route::get('uor','App\Http\Controllers\M4dashboardController@uor');
 Route::post('/buscador_gde','App\Http\Controllers\M4dashboardController@buscador_gde')->name('buscador_gde');
 
+
+Route::resource('futurojubilado', FuturoJubiladoController::class);
+
+
+
+// Ruta para el método create_from_json
+Route::get('/futurosjubilados/create_from_json', [FuturoJubiladoController::class, 'create_from_json']);
+// use App\Http\Controllers\FuturoJubiladoController;
+
+Route::get('/futurosjubilados', [FuturoJubiladoController::class, 'index'])->name('futurosjubilados.index');

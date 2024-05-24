@@ -316,12 +316,14 @@
                             <th>Unidad Organizativa</th>
                             <th>Cantidad</th>
                             <th>Acciones</th>
+                            <th>Editar</th>
 
                         </tr>
                     </thead>
                     <tfoot>
 
                         <tr class="table-dark">
+                            <th>&nbsp; </th>
                             <th>&nbsp; </th>
                             <th>&nbsp; </th>
                             <th>&nbsp; </th>
@@ -387,22 +389,51 @@
                         'Descargar informe <i class="fas fa-file-excel"></i>' +
                         '</button>';
                 }
-            }
+            },
+            {
+                data: 'UOR',
+                render: function(data) {
+                    // Agrega un botón en la columna y asocia la función para redirigir a la vista de edición
+                    return '<button class="edit-button" data-uor="' + data + '">' +
+                        'Editar informe <i class="fas fa-edit"></i>' +
+                        '</button>';
+                }
+            }          
+
         ]
     });
 
 
-    // Agrega un evento de clic utilizando delegación en el contenedor para manejar dinámicamente los botones
-    document.querySelector('#table_instituciones').addEventListener('click', function(event) {
+    // // Agrega un evento de clic utilizando delegación en el contenedor para manejar dinámicamente los botones
+    // document.querySelector('#table_instituciones').addEventListener('click', function(event) {
+    //     if (event.target.classList.contains('export-button')) {
+    //         // Obtiene la UOR desde el atributo data
+
+    //         const uor = event.target.dataset.uor;
+    //         console.log('uor', event.target.dataset.uor);
+    //         // Llama a la función exportToExcel con la URL y nombre del archivo
+    //         exportToExcel( SERVER_NODE + '/excel_jubilaciones_detalle_etiqueta/' + uor, 'jubilaciones_instituciones_' + uor + '.xlsx');
+    //     }
+    // });
+
+        // Agrega un evento de clic utilizando delegación en el contenedor para manejar dinámicamente los botones
+        document.querySelector('#table_instituciones').addEventListener('click', function(event) {
         if (event.target.classList.contains('export-button')) {
             // Obtiene la UOR desde el atributo data
-
             const uor = event.target.dataset.uor;
             console.log('uor', event.target.dataset.uor);
             // Llama a la función exportToExcel con la URL y nombre del archivo
-            exportToExcel( SERVER_NODE + '/excel_jubilaciones_detalle_etiqueta/' + uor, 'jubilaciones_instituciones_' + uor + '.xlsx');
+            exportToExcel(SERVER_NODE + '/excel_jubilaciones_detalle_etiqueta/' + uor, 'jubilaciones_instituciones_' + uor + '.xlsx');
+        } else if (event.target.classList.contains('edit-button')) {
+            // Obtiene la UOR desde el atributo data
+            const uor = event.target.dataset.uor;
+            // Redirige al método index del controlador FuturoJubiladoController
+            window.location.href = '/futurojubilado?uor=' + uor;
         }
     });
+
+
+
 </script>
 
 
