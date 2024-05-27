@@ -80,19 +80,17 @@ class M4dashboardController extends AppBaseController
 
         //Planta Total
 
-        $cSelect=
-        "SELECT COUNT(*) as personas FROM CAR_SIGNOS WHERE estadolegajo=1 AND admin_persona='S' AND rats<>'9999999' AND periodo='202307';";
+        // $cSelect=
+        // "SELECT COUNT(*) as personas FROM CAR_SIGNOS WHERE estadolegajo=1 AND admin_persona='S' AND rats<>'9999999' AND periodo='202307';";
 
-        $plantaTotal=   collect( DB::select(DB::raw($cSelect))) ;          
+        // $plantaTotal=   collect( DB::select(DB::raw($cSelect))) ;          
 
         $user_nickname = session('user_nickname');
 
 
         //dd($usuario->sexo);
 
-        return view('historialoperaciones.planta', [
-        'plantaTotal' => $plantaTotal,        
-        ]); 
+        return view('historialoperaciones.planta' ); 
     }    
 
 
@@ -489,8 +487,7 @@ GROUP BY genero" ;
         $dateAyer =  str_replace( "-" , "/" , $date_yesterday ) ;
         $dateAyer =  $date_yesterday  ;
 
- 
-        
+     
  
   
  
@@ -500,19 +497,17 @@ GROUP BY genero" ;
 
         //Planta Total
 
-        $cSelect=
-        "SELECT COUNT(*) as personas FROM CAR_SIGNOS WHERE estadolegajo=1 AND admin_persona='S' AND rats<>'9999999' AND periodo='202307';";
+        // $cSelect=
+        // "SELECT COUNT(*) as personas FROM CAR_SIGNOS WHERE estadolegajo=1 AND admin_persona='S' AND rats<>'9999999' AND periodo='202307';";
 
-        $plantaTotal=   collect( DB::select(DB::raw($cSelect))) ;          
+        // $plantaTotal=   collect( DB::select(DB::raw($cSelect))) ;          
 
         $user_nickname = session('user_nickname');
 
 
         //dd($usuario->sexo);
 
-        return view('historialoperaciones.personas', [
-        'plantaTotal' => $plantaTotal,        
-        ]); 
+        return view('historialoperaciones.personas' ); 
     }    
 
 

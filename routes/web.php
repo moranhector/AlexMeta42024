@@ -69,3 +69,6 @@ Route::get('/futurosjubilados/create_from_json', [FuturoJubiladoController::clas
 // use App\Http\Controllers\FuturoJubiladoController;
 
 Route::get('/futurosjubilados', [FuturoJubiladoController::class, 'index'])->name('futurosjubilados.index');
+
+Route::post('/futurosjubilados/store', [FuturoJubiladoController::class, 'store'])->name('futurosjubilados.store');
+
