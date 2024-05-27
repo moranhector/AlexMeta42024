@@ -8,11 +8,13 @@
 
 
     <form method="GET" action="{{ route('futurojubilado.index') }}">
+
+
         <div class="row">
             <div class="col-md-4 form-group">
-                <label for="etiqueta">Selecciona una etiqueta:</label>
+                <label for="etiqueta">Selecciona una Jurisdicción:</label>
                 <select id="etiqueta" name="etiqueta" class="form-control" onchange="this.form.submit()">
-                    <option value="">Todas las etiquetas</option>
+                    <option value="">Todas</option>
                     @foreach ($etiquetas as $etiqueta)
                     <option value="{{ $etiqueta->etiqueta }}" {{ request('etiqueta') == $etiqueta->etiqueta ? 'selected' : '' }}>
                         {{ $etiqueta->etiqueta }}
@@ -22,7 +24,7 @@
             </div>
 
             <div class="col-md-4 form-group">
-                <label for="estado">Selecciona un estado:</label>
+                <label for="estado">Selecciona un estado de trámite:</label>
                 <select id="estado" name="estado" class="form-control" onchange="this.form.submit()">
                     <option value="">Todos los estados</option>
                     @foreach ($estados as $estado)
@@ -38,7 +40,44 @@
                 <input type="text" id="search" name="search" class="form-control" value="{{ request('search') }}" placeholder="Buscar por nombre o CUIL">
             </div>
         </div>
+
+
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label for="regimen">Selecciona un régimen:</label>
+                <select id="regimen" name="regimen" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todos los regímenes</option>
+                    @foreach ($regimenes as $regimen)
+                    
+
+                    <option value="{{ $regimen->regimen }}"  {{ request('regimen') == $regimen->regimen ? 'selected' : '' }} >
+                        {{ $regimen->regimen }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label for="genero">Selecciona un género:</label>
+                <select id="genero" name="genero" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    @foreach ($generos as $genero)
+                    <option value="{{ $genero->genero }}" {{ request('genero') == $genero->genero ? 'selected' : '' }}>
+                        {{ $genero->genero }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>            
+
+
+        </div>
+
+
+
+
         <button type="submit" class="btn btn-primary">Buscar</button>
+
+
     </form>
 
 
@@ -50,12 +89,13 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
+            <!-- <th>ID</th> -->
             <th>CUIL</th>
             <th>Nombre y Apellido</th>
             <th>Edad</th>
             <th>UOR</th>
             <th>Etiqueta</th>
+            <th>RATS</th>
             <th>Cod.</th>
             <th>Obs</th>
             <th></th>
@@ -66,11 +106,13 @@
     <tbody>
         @foreach ($futurosjubilados as $futuro)
         <tr>
-            <td>{{ $futuro->id }}</td>
+            <!-- <td>{{ $futuro->id }}</td> -->
             <td>{{ $futuro->cuil }}</td>
             <td>{{ $futuro->nombreapellido }}</td>
+            <td>{{ $futuro->edad }}</td>
             <td data-toggle="tooltip" title="{{ $futuro->descripcionuor }} {{ $futuro->dependencia }}">{{ substr($futuro->descripcionuor, 0, 20) }} {{ substr($futuro->dependencia, 0, 20) }}</td>
             <td>{{ $futuro->etiqueta }}</td>
+            <td>{{ $futuro->rats }}</td>
             <td data-toggle="tooltip" title="{{ $futuro->last_cod_jub_desc }}">{{ $futuro->last_cod_jub }}</td>
             <td>{{ $futuro->comments }}</td>
             <td>

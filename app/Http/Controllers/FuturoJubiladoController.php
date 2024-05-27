@@ -8,6 +8,7 @@ use App\Models\FuturoJubilado; // Asegurate de importar el modelo FuturoJubilado
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class FuturoJubiladoController extends Controller
 {
@@ -20,10 +21,23 @@ class FuturoJubiladoController extends Controller
     public function index(Request $request)
     {
         $etiqueta = $request->input('etiqueta');
+    
         $estado = $request->input('estado');
+        $regimen = $request->input('regimen');
+        $genero  = $request->input('genero');
+
         $search = $request->input('search');
 
         $query = FuturoJubilado::query();
+
+
+        if ($regimen) {
+            $query->where(DB::raw('LEFT(rats, 2)'), $regimen);
+        }        
+
+        if ($genero) {
+            $query->where('genero', $genero);
+        }        
 
         if ($etiqueta) {
             $query->where('etiqueta', $etiqueta);
@@ -44,13 +58,25 @@ class FuturoJubiladoController extends Controller
         $totalJubilados = $futurosjubilados->count();
 
         $etiquetas = FuturoJubilado::select('etiqueta')->distinct()->orderBy('etiqueta')->get();
+
+        $generos   = FuturoJubilado::select('genero')->distinct()->orderBy('genero')->get();
+
+        $regimenes = FuturoJubilado::select(DB::raw('LEFT(rats, 2) as regimen'))
+        ->distinct()
+        ->orderBy('regimen')
+        ->get();        
+        
         $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
             ->where('last_cod_jub', 'like', 'J%')
             ->distinct()
             ->orderBy('last_cod_jub')
             ->get();
 
-        return view('futurojubilado.index', compact('futurosjubilados', 'totalJubilados', 'etiquetas', 'estados'));
+        //dd($regimenes)    ;
+
+        return view('futurojubilado.index', 
+         compact('futurosjubilados', 'totalJubilados', 'etiquetas', 'estados','regimenes','generos') 
+        );
     }
 
 
