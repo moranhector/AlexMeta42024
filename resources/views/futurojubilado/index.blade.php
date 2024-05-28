@@ -80,26 +80,6 @@
                 </select>
             </div>
 
-
-
-            <!-- <div class="col-md-4 form-group">
-                <label for="comment">Filtro por observaciones:</label>
-                <select id="comment" name="comment" class="form-control" onchange="this.form.submit()">
-                    <option value="">Todos</option>
-
-                    <option value="">
-                        Con observaciones
-                    </option>
-
-                    <option value="">
-                        Sin observaciones
-                    </option>
-
-                </select>
-            </div>             -->
-
-
-
         </div>
 
 
@@ -151,9 +131,9 @@
                 <td>
                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ $futuro->id }}" data-cuil="{{ $futuro->cuil }}" data-nombreapellido="{{ $futuro->nombreapellido }}" data-comments="{{ $futuro->comments }}">Edit</button>
                 </td>
-                <td>
-                    <a href="{{ route('futurojubilado.destroy', $futuro->cuil) }}" class="btn btn-danger">Del</a>
-                </td>
+                <!-- <td>
+                    <a href="{ { route('futurojubilado.destroy', $futuro->cuil) } }" class="btn btn-danger">Del</a>
+                </td> -->
             </tr>
             @endforeach
         </tbody>

@@ -280,7 +280,23 @@ class FuturoJubiladoController extends Controller
 
     public function show($id)
     {
-        $response = Http::get($this->apiUrl . 'AMBIENTE/' . $id);
+        //dd( $id );
+        $dni = substr($id, 2 , 8 );     
+        //dd( 'dni', $dni)  ;
+        $apiUrlHisto = 'http://dic-alex-tst.mendoza.gov.ar:3000/futurosjubiladoshisto/';
+
+        //dd($apiUrlHisto . $dni);
+        
+        $response = Http::get( $apiUrlHisto . $dni);
+
+        if ($response->successful()) {
+            // Obtener los datos del JSON
+            $data = $response->json()['data'];
+            dd($data );
+        }
+        
+
+        dd( "no vino" ) ;
         $futuroJubilado = $response->json();
 
         return view('futurojubilado.show', compact('futuroJubilado'));
