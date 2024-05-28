@@ -28,7 +28,11 @@ class FuturoJubiladoController extends Controller
 
         $search = $request->input('search');
 
+        $comment = $request->input('comment');                
+
         $query = FuturoJubilado::query();
+
+
 
 
         if ($regimen) {
@@ -53,6 +57,13 @@ class FuturoJubiladoController extends Controller
                     ->orWhere('cuil', 'like', "%$search%");
             });
         }
+
+        if ($comment === 'con') {
+            $query->whereNotNull('comments');
+        } elseif ($comment === 'sin') {
+            $query->whereNull('comments');
+        }
+
 
         $futurosjubilados = $query->get();
         $totalJubilados = $futurosjubilados->count();
