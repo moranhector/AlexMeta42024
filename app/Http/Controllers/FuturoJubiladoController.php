@@ -76,9 +76,10 @@ class FuturoJubiladoController extends Controller
         ->distinct()
         ->orderBy('regimen')
         ->get();        
+
+        // ->where('last_cod_jub', 'like', 'J%')
         
         $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
-            ->where('last_cod_jub', 'like', 'J%')
             ->distinct()
             ->orderBy('last_cod_jub')
             ->get();
@@ -216,28 +217,49 @@ class FuturoJubiladoController extends Controller
                 // Truncar el campo LAST_OBSERVACION a los primeros 190 caracteres
                 $last_observacion = Str::limit($item['LAST_OBSERVACION'], 190, '');
 
+                $cuil = $item['CUIL'];
 
-                FuturoJubilado::create([
-                    'cuil' => $item['CUIL'],
-                    'nombreapellido' => $item['NOMBREAPELLIDO'],
-                    'fechanacimiento' => $fechanacimiento,
-                    'edad' => $item['EDAD'],
-                    'fechaingreso' =>  $fechaingreso,
-                    'genero' => $item['GENERO'],
-                    'periodo' => $item['PERIODO'],
-                    'descripcionuor' => $item['DESCRIPCIONUOR'],
-                    'dependencia' => $item['DEPENDENCIA'],
-                    'etiqueta' => $item['ETIQUETA'],
-                    'rats' => $item['RATS'],
-                    'clase' => $item['CLASE'],
-                    'last_cod_jub' => $item['LAST_COD_JUB'],
-                    'last_cod_jub_desc' => $item['LAST_COD_JUB_DESC'],
-                    'last_fecha_desde' => $last_fecha_desde,
-                    'last_fecha_hasta' => $last_fecha_hasta,
-                    'last_observacion' => $last_observacion,
-                    'id_secuser' => $item['ID_SECUSER'],
-                    'fecha_actualiza' => $fecha_actualiza
-                ]);
+                // Buscar el registro por CUIL
+                $futuroJubilado = FuturoJubilado::where('cuil', $cuil)->first();
+                
+                if ($futuroJubilado) {
+                    // Registro encontrado, actualizar los datos necesarios
+                    $futuroJubilado->update([
+                        'periodo' => $item['PERIODO'],
+                        'last_cod_jub' => $item['LAST_COD_JUB'],
+                        'last_cod_jub_desc' => $item['LAST_COD_JUB_DESC'],
+                        'last_fecha_desde' => $last_fecha_desde,
+                        'last_fecha_hasta' => $last_fecha_hasta,
+                        'last_observacion' => $last_observacion,
+                        'id_secuser' => $item['ID_SECUSER'],
+                        'fecha_actualiza' => $fecha_actualiza
+                    ]);
+                } else {
+                    // No se encontró el registro, crear uno nuevo
+                    FuturoJubilado::create([
+                        'cuil' => $item['CUIL'],
+                        'nombreapellido' => $item['NOMBREAPELLIDO'],
+                        'fechanacimiento' => $fechanacimiento,
+                        'edad' => $item['EDAD'],
+                        'fechaingreso' => $fechaingreso,
+                        'genero' => $item['GENERO'],
+                        'periodo' => $item['PERIODO'],
+                        'descripcionuor' => $item['DESCRIPCIONUOR'],
+                        'dependencia' => $item['DEPENDENCIA'],
+                        'etiqueta' => $item['ETIQUETA'],
+                        'rats' => $item['RATS'],
+                        'clase' => $item['CLASE'],
+                        'last_cod_jub' => $item['LAST_COD_JUB'],
+                        'last_cod_jub_desc' => $item['LAST_COD_JUB_DESC'],
+                        'last_fecha_desde' => $last_fecha_desde,
+                        'last_fecha_hasta' => $last_fecha_hasta,
+                        'last_observacion' => $last_observacion,
+                        'id_secuser' => $item['ID_SECUSER'],
+                        'fecha_actualiza' => $fecha_actualiza
+                    ]);
+                }
+                
+
             }
 
 
@@ -292,14 +314,15 @@ class FuturoJubiladoController extends Controller
         if ($response->successful()) {
             // Obtener los datos del JSON
             $data = $response->json()['data'];
-            dd($data );
+            // dd($data );
         }
         
 
-        dd( "no vino" ) ;
+        //dd( "no vino" ) ;
         $futuroJubilado = $response->json();
 
-        return view('futurojubilado.show', compact('futuroJubilado'));
+        // return view('futurojubilado.show', compact('futuroJubilado'));
+        return view('futurojubilado.futurosjubiladoshisto', compact('data'));        
     }
 
     public function edit($id)

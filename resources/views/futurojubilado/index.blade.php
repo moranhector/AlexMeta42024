@@ -1,9 +1,19 @@
 @extends('layouts.app')
 @section('content')
+
 <div class="container">
     <h1>Futuros Jubilados</h1>
 
 
+
+
+
+    <!-- Botón para actualizar los futuros jubilados desde la API -->
+    <a href="{{ url('/futurosjubilados/create_from_json') }}" class="btn btn-success mb-3">
+        Actualizar Futuros Jubilados
+    </a>
+
+ 
 
 
 
@@ -91,7 +101,7 @@
     </form>
 
 
-
+  
 
     <p>Total de futuros jubilados: {{ $totalJubilados }}</p>
     <!-- Tabla -->
