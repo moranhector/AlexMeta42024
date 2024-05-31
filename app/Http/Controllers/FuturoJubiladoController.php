@@ -10,6 +10,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
+
 class FuturoJubiladoController extends Controller
 {
     //protected $apiUrl = 'http://localhost:3000/excel_jubilaciones_detalle_etiqueta/';
@@ -93,84 +94,17 @@ class FuturoJubiladoController extends Controller
 
 
 
-    // public function index(Request $request)
-    // {
-    //     $etiqueta = $request->input('etiqueta');
-    //     $estado = $request->input('estado');
-
-    //     $query = FuturoJubilado::query();
-
-    //     if ($etiqueta) {
-    //         $query->where('etiqueta', $etiqueta);
-    //     }
-
-    //     if ($estado) {
-    //         $query->where('last_cod_jub', $estado);
-    //     }
-
-    //     $futurosjubilados = $query->get();
-    //     $totalJubilados = $futurosjubilados->count();
-
-    //     $etiquetas = FuturoJubilado::select('etiqueta')->distinct()->orderBy('etiqueta')->get();
-    //     // $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')->distinct()->orderBy('last_cod_jub')->get();
-
-    //     $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
-    //     ->where('last_cod_jub', 'like', 'J%')
-    //     ->distinct()
-    //     ->orderBy('last_cod_jub')
-    //     ->get();        
-
-    //     return view('futurojubilado.index', compact('futurosjubilados', 'totalJubilados', 'etiquetas', 'estados'));
-    // }
-
-
-
-
-
-    // public function index( Request $request )
-    // {
-
-    //     $etiqueta = $request->input('etiqueta');
-    //     $estado   = $request->input('estado');
-
-    //     //$futurosjubilados = FuturoJubilado::all();
-
-    //     if ($etiqueta) {
-    //         $futurosjubilados = FuturoJubilado::where('etiqueta', $etiqueta)->get();
-    //     } else {
-    //         $futurosjubilados = FuturoJubilado::all();
-    //     }        
-
-
-    //     $totalJubilados = $futurosjubilados->count();
-
-
-
-    //     // SELECT DISTINCT etiqueta FROM futurosjubilados ORDER BY etiqueta        
-    //     $etiquetas = FuturoJubilado::select('etiqueta')->distinct()->orderBy('etiqueta')->get();
-    //     $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')->distinct()->orderBy('last_cod_jub')->get();
-
-
-
-    //     return view('futurojubilado.index', compact('futurosjubilados','totalJubilados','etiquetas','estados'));
-    // }    
-
-
     public function create_from_json()
     {
-        //dd("entro");
         // Consumir la API REST
         //$response = Http::get('http://localhost:3000/futurosjubilados');
         $response = Http::get('http://dic-alex-tst.mendoza.gov.ar:3000/futurosjubilados');
-
-        //dd($response);
 
         // Verificar si la respuesta es exitosa
         if ($response->successful()) {
             // Obtener los datos del JSON
             $data = $response->json()['data'];
 
-            //dd($data);
 
             // Iterar sobre cada registro y guardarlo en la base de datos
             foreach ($data as $item) {
@@ -178,9 +112,6 @@ class FuturoJubiladoController extends Controller
                 // Convertir las fechas al formato correcto
                 $fechanacimiento = Carbon::createFromFormat('d/m/Y', $item['FECHANACIMIENTO'])->format('Y-m-d');
                 $fechaingreso = Carbon::createFromFormat('d/m/Y', $item['FECHAINGRESO'])->format('Y-m-d');
-
-                // $last_fecha_hasta = Carbon::createFromFormat('Y-m-d\TH:i:s.u\Z', $item['LAST_FECHA_HASTA'])->format('Y-m-d');
-                // $last_fecha_desde = Carbon::createFromFormat('Y-m-d\TH:i:s.u\Z', $item['LAST_FECHA_DESDE'])->format('Y-m-d');                
 
                 if (!is_null($item['FECHA_ACTUALIZA'])) {
                     try {
@@ -258,11 +189,8 @@ class FuturoJubiladoController extends Controller
                         'fecha_actualiza' => $fecha_actualiza
                     ]);
                 }
-                
 
             }
-
-
 
             return response()->json(['message' => 'Datos insertados correctamente.'], 200);
         } else {
@@ -270,8 +198,6 @@ class FuturoJubiladoController extends Controller
             return response()->json(['message' => 'Error al consumir la API.'], 500);
         }
     }
-
-
 
     public function create()
     {
@@ -302,7 +228,15 @@ class FuturoJubiladoController extends Controller
 
     public function show($id)
     {
-        //dd( $id );
+        
+
+        $cuil = $id;
+        $futuro = FuturoJubilado::where('CUIL', $cuil)->first();
+
+        
+
+        //dd( $futuro );
+
         $dni = substr($id, 2 , 8 );     
         //dd( 'dni', $dni)  ;
         $apiUrlHisto = 'http://dic-alex-tst.mendoza.gov.ar:3000/futurosjubiladoshisto/';
@@ -322,7 +256,7 @@ class FuturoJubiladoController extends Controller
         $futuroJubilado = $response->json();
 
         // return view('futurojubilado.show', compact('futuroJubilado'));
-        return view('futurojubilado.futurosjubiladoshisto', compact('data'));        
+        return view('futurojubilado.futurosjubiladoshisto', compact('data','dni','futuro'));        
     }
 
     public function edit($id)

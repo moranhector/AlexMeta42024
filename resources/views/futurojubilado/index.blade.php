@@ -111,10 +111,10 @@
             <tr>
                 <!-- <th>ID</th> -->
                 <th>CUIL</th>
-                <th>Nombre y Apellido</th>
+                <th>Nombres</th>
                 <th>Edad</th>
                 <th>UOR</th>
-                <th>Etiqueta</th>
+                <th>Institución</th>
                 <th>RATS</th>
                 <th>Cod.</th>
                 <th>Obs</th>
