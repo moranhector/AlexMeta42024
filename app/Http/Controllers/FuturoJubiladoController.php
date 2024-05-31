@@ -205,24 +205,40 @@ class FuturoJubiladoController extends Controller
     }
 
 
-
-
-
     public function store(Request $request)
     {
         $request->validate([
             'id' => 'required|exists:futurosjubilados,id',
             'comments' => 'required|string|max:255',
         ]);
-
+    
         $futuro = FuturoJubilado::find($request->id);
         if ($futuro) {
             $futuro->comments = $request->comments;
             $futuro->save();
         }
-
-        return redirect()->route('futurojubilado.index')->with('success', 'Comentario actualizado correctamente');
+    
+        return response()->json(['success' => 'Comentario actualizado correctamente']);
     }
+    
+
+
+
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'id' => 'required|exists:futurosjubilados,id',
+    //         'comments' => 'required|string|max:255',
+    //     ]);
+
+    //     $futuro = FuturoJubilado::find($request->id);
+    //     if ($futuro) {
+    //         $futuro->comments = $request->comments;
+    //         $futuro->save();
+    //     }
+
+    //     return redirect()->route('futurojubilado.index')->with('success', 'Comentario actualizado correctamente');
+    // }
 
 
 

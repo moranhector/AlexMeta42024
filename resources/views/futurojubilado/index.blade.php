@@ -13,7 +13,7 @@
         Actualizar Futuros Jubilados
     </a>
 
- 
+
 
 
 
@@ -101,7 +101,7 @@
     </form>
 
 
-  
+
 
     <p>Total de futuros jubilados: {{ $totalJubilados }}</p>
     <!-- Tabla -->
@@ -125,8 +125,7 @@
         </thead>
         <tbody>
             @foreach ($futurosjubilados as $futuro)
-            <tr>
-                <!-- <td>{{ $futuro->id }}</td> -->
+            <tr id="row-{{ $futuro->id }}">
                 <td>{{ $futuro->cuil }}</td>
                 <td>{{ $futuro->nombreapellido }}</td>
                 <td>{{ $futuro->edad }}</td>
@@ -134,17 +133,17 @@
                 <td>{{ $futuro->etiqueta }}</td>
                 <td>{{ $futuro->rats }}</td>
                 <td data-toggle="tooltip" title="{{ $futuro->last_cod_jub_desc }}">{{ $futuro->last_cod_jub }}</td>
-                <td>{{ $futuro->comments }}</td>
+                <td class="comments-column" id="comments-{{ $futuro->id }}">{{ $futuro->comments }}</td>
                 <td>
                     <a href="{{ route('futurojubilado.show', $futuro->cuil) }}" class="btn btn-info">Ver</a>
                 </td>
                 <td>
                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ $futuro->id }}" data-cuil="{{ $futuro->cuil }}" data-nombreapellido="{{ $futuro->nombreapellido }}" data-comments="{{ $futuro->comments }}">Edit</button>
                 </td>
-                <!-- <td>
-                    <a href="{ { route('futurojubilado.destroy', $futuro->cuil) } }" class="btn btn-danger">Del</a>
-                </td> -->
             </tr>
+
+
+
             @endforeach
         </tbody>
     </table>
@@ -159,7 +158,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="editForm" method="POST" action="{{ route('futurosjubilados.store') }}">
+                <form id="editForm" method="POST">
                     @csrf
                     <div class="modal-body">
                         <input type="hidden" id="id" name="id">
@@ -181,27 +180,63 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        $(document).ready(function() {
-            $('#editModal').on('show.bs.modal', function(event) {
-                console.log('ENTRO');
-                var button = $(event.relatedTarget)
-                var id = button.data('id')
-                var cuil = button.data('cuil')
-                var nombreapellido = button.data('nombreapellido')
-                var comments = button.data('comments')
+<script>
+    $(document).ready(function() {
+        $('#editModal').on('show.bs.modal', function(event) {
+            console.log('ENTRO');
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var cuil = button.data('cuil');
+            var nombreapellido = button.data('nombreapellido');
+            var comments = button.data('comments');
 
-                var modal = $(this)
-                modal.find('.modal-body #id').val(id)
-                modal.find('.modal-body #cuil').val(cuil)
-                modal.find('.modal-body #nombreapellido').val(nombreapellido)
-                modal.find('.modal-body #comments').val(comments)
-            })
+            var modal = $(this);
+            modal.find('.modal-body #id').val(id);
+            modal.find('.modal-body #cuil').val(cuil);
+            modal.find('.modal-body #nombreapellido').val(nombreapellido);
+            modal.find('.modal-body #comments').val(comments);
         });
-    </script>
+    });
+</script>
 
+<script>
+    $(document).ready(function() {
+        $('#editForm').on('submit', function(e) {
+            e.preventDefault();
 
+            let form = $(this);
+            let url = "{{ route('futurosjubilados.store') }}";
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: form.serialize(),
+                success: function(response) {
+                    // Aquí puedes actualizar la fila correspondiente con los nuevos datos
+                    let id = $('#id').val();
+                    let comments = $('#comments').val();
+
+                    // Actualizar la celda de comentarios en la tabla
+                    $('#row-' + id + ' .comments-column').text(comments);
+
+                    // Actualizar el atributo data-comments del botón
+                    $('button[data-id="' + id + '"]').data('comments', comments);
+
+                    // Cerrar el modal después de mostrar el alert
+                    setTimeout(function() {
+                        $('#editModal').modal('hide');
+                    }, 500);
+                },
+                error: function(response) {
+                    // Manejo de errores
+                    alert('Error al actualizar el comentario');
+                }
+            });
+        });
+    });
+</script>
 
 
 
