@@ -134,11 +134,13 @@
                 <td>{{ $futuro->rats }}</td>
                 <td data-toggle="tooltip" title="{{ $futuro->last_cod_jub_desc }}">{{ $futuro->last_cod_jub }}</td>
                 <td class="comments-column" id="comments-{{ $futuro->id }}">{{ $futuro->comments }}</td>
-                <td>
-                    <a href="{{ route('futurojubilado.show', $futuro->cuil) }}" class="btn btn-info">Ver</a>
-                </td>
+                <!-- <td>
+                    <a href="{ { route('futurojubilado.show', $futuro->cuil) } }" class="btn btn-info">Ver</a>
+                </td> -->
                 <td>
                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ $futuro->id }}" data-cuil="{{ $futuro->cuil }}" data-nombreapellido="{{ $futuro->nombreapellido }}" data-comments="{{ $futuro->comments }}">Edit</button>
+                    </button>
+
                 </td>
             </tr>
 
@@ -149,8 +151,10 @@
     </table>
 
     <!-- Modal -->
+
+    <!-- Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document"> <!-- Cambiamos a modal-lg para hacerlo más grande -->
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">Editar Comentarios</h5>
@@ -171,6 +175,24 @@
                             <label for="comments">Comentarios</label>
                             <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
                         </div>
+                        <div class="form-group">
+                            <label>Historial de Trámites</label>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha Inicio</th>
+                                        <th>Fecha Fin</th>
+                                        <th>Código de Trámite</th>
+                                        <th>Observación</th>
+                                        <th>Usuario</th>
+                                        <th>Fecha Actualización</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tramites-table-body">
+                                    <!-- Aquí se llenarán los datos de la API -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -180,6 +202,11 @@
             </div>
         </div>
     </div>
+
+
+
+    <!-- Modal -->
+
 </div>
 
 <script>
@@ -188,18 +215,54 @@
             console.log('ENTRO');
             var button = $(event.relatedTarget);
             var id = button.data('id');
-            var cuil = button.data('cuil');
+            var cuil = button.data('cuil').toString(); // Convertir cuil a cadena
+
+            console.log("cuil", cuil);
+
+            console.log("dni", cuil.substring(2, 10));
+
             var nombreapellido = button.data('nombreapellido');
             var comments = button.data('comments');
+            var dni = cuil.substring(2, 10);
 
             var modal = $(this);
             modal.find('.modal-body #id').val(id);
             modal.find('.modal-body #cuil').val(cuil);
             modal.find('.modal-body #nombreapellido').val(nombreapellido);
             modal.find('.modal-body #comments').val(comments);
+
+            // Limpiar la tabla antes de llenarla
+            var tableBody = modal.find('.modal-body #tramites-table-body');
+            tableBody.empty();
+
+            // Hacer la llamada AJAX a la API
+            $.ajax({
+                url: 'http://dic-alex-tst.mendoza.gov.ar:3000/futurosjubiladoshisto/' + dni,
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var tramites = response.data;
+                    tramites.forEach(function(tramite) {
+                        var row = '<tr>' +
+                            '<td>' + tramite.DT_START + '</td>' +
+                            '<td>' + tramite.DT_END + '</td>' +
+                            '<td>' + tramite.COD_JUBILACION + ' ' + tramite.STD_N_EXT_ORGESP + '</td>' +
+                            '<td>' + (tramite.OBSERVACION ? tramite.OBSERVACION : '') + '</td>' +
+                            '<td>' + tramite.ID_SECUSER + '</td>' +
+                            '<td>' + tramite.FECHA_ACTUALIZA + '</td>' +
+                            '</tr>';
+                        tableBody.append(row);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al obtener los datos de la API:', error);
+                }
+            });
         });
     });
 </script>
+
+
 
 <script>
     $(document).ready(function() {
@@ -224,10 +287,7 @@
                     // Actualizar el atributo data-comments del botón
                     $('button[data-id="' + id + '"]').data('comments', comments);
 
-                    // Cerrar el modal después de mostrar el alert
-                    setTimeout(function() {
-                        $('#editModal').modal('hide');
-                    }, 500);
+                    $('#editModal').find('.close').click();
                 },
                 error: function(response) {
                     // Manejo de errores
