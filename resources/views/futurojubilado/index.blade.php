@@ -150,14 +150,14 @@
         </tbody>
     </table>
 
-    <!-- Modal -->
+
 
     <!-- Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document"> <!-- Cambiamos a modal-lg para hacerlo más grande -->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Editar Comentarios</h5>
+                    <!-- <h5 class="modal-title" id="editModalLabel">Editar</h5> -->
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -167,25 +167,66 @@
                     <div class="modal-body">
                         <input type="hidden" id="id" name="id">
                         <input type="hidden" id="cuil" name="cuil">
-                        <div class="form-group">
-                            <label for="nombreapellido">Nombre y Apellido</label>
-                            <input type="text" class="form-control" id="nombreapellido" name="nombreapellido" readonly>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label for="nombreapellido">Nombre y Apellido</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="nombreapellido" name="nombreapellido" readonly>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="comments">Comentarios</label>
-                            <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label for="cuil">CUIL</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="cuil" name="cuil" value=" " readonly>
+                            </div>
+
+                            <div class="col-md-1">
+                                <label for="dni">DNI</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="dni" name="dni" value=" " readonly>
+                            </div>
+
+                            <div class="col-md-1">
+                                <label for="idM4">Id M4</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="idM4" name="idM4" value=" " readonly>
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label for="comments">Comentarios</label>
+                            </div>
+                            <div class="col-md-9">
+                                <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
+                            </div>
+
                         </div>
                         <div class="form-group">
                             <label>Historial de Trámites</label>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Fecha Inicio</th>
-                                        <th>Fecha Fin</th>
-                                        <th>Código de Trámite</th>
+                                        <th>F.Inicio</th>
+                                        <th>F.Fin</th>
+                                        <th>Trámite</th>
                                         <th>Observación</th>
                                         <th>Usuario</th>
-                                        <th>Fecha Actualización</th>
+                                        <th>Actualizado</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tramites-table-body">
@@ -228,6 +269,7 @@
             var modal = $(this);
             modal.find('.modal-body #id').val(id);
             modal.find('.modal-body #cuil').val(cuil);
+            modal.find('.modal-body #dni').val(dni);
             modal.find('.modal-body #nombreapellido').val(nombreapellido);
             modal.find('.modal-body #comments').val(comments);
 
@@ -242,10 +284,21 @@
                 dataType: 'json',
                 success: function(response) {
                     var tramites = response.data;
+
+
+
                     tramites.forEach(function(tramite) {
+
+                        modal.find('.modal-body #idM4').val(tramite.ID_M4);
+
+                        var formattedStartDate = formatDate(tramite.DT_START);
+                        var formattedEndDate = formatDate(tramite.DT_END);
+
+
+
                         var row = '<tr>' +
-                            '<td>' + tramite.DT_START + '</td>' +
-                            '<td>' + tramite.DT_END + '</td>' +
+                            '<td>' + formattedStartDate + '</td>' +
+                            '<td>' + formattedEndDate + '</td>' +
                             '<td>' + tramite.COD_JUBILACION + ' ' + tramite.STD_N_EXT_ORGESP + '</td>' +
                             '<td>' + (tramite.OBSERVACION ? tramite.OBSERVACION : '') + '</td>' +
                             '<td>' + tramite.ID_SECUSER + '</td>' +
@@ -259,6 +312,16 @@
                 }
             });
         });
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            var day = ('0' + date.getDate()).slice(-2);
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var year = date.getFullYear();
+            return day + '/' + month + '/' + year;
+        }
+
+
     });
 </script>
 
