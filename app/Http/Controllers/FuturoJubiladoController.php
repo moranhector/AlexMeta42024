@@ -22,14 +22,14 @@ class FuturoJubiladoController extends Controller
     public function index(Request $request)
     {
         $etiqueta = $request->input('etiqueta');
-    
+
         $estado = $request->input('estado');
         $regimen = $request->input('regimen');
         $genero  = $request->input('genero');
 
         $search = $request->input('search');
 
-        $comment = $request->input('comment');                
+        $comment = $request->input('comment');
 
         $query = FuturoJubilado::query();
 
@@ -38,11 +38,11 @@ class FuturoJubiladoController extends Controller
 
         if ($regimen) {
             $query->where(DB::raw('LEFT(rats, 2)'), $regimen);
-        }        
+        }
 
         if ($genero) {
             $query->where('genero', $genero);
-        }        
+        }
 
         if ($etiqueta) {
             $query->where('etiqueta', $etiqueta);
@@ -74,12 +74,12 @@ class FuturoJubiladoController extends Controller
         $generos   = FuturoJubilado::select('genero')->distinct()->orderBy('genero')->get();
 
         $regimenes = FuturoJubilado::select(DB::raw('LEFT(rats, 2) as regimen'))
-        ->distinct()
-        ->orderBy('regimen')
-        ->get();        
+            ->distinct()
+            ->orderBy('regimen')
+            ->get();
 
         // ->where('last_cod_jub', 'like', 'J%')
-        
+
         $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
             ->distinct()
             ->orderBy('last_cod_jub')
@@ -87,8 +87,9 @@ class FuturoJubiladoController extends Controller
 
         //dd($regimenes)    ;
 
-        return view('futurojubilado.index', 
-         compact('futurosjubilados', 'totalJubilados', 'etiquetas', 'estados','regimenes','generos') 
+        return view(
+            'futurojubilado.index',
+            compact('futurosjubilados', 'totalJubilados', 'etiquetas', 'estados', 'regimenes', 'generos')
         );
     }
 
@@ -152,7 +153,7 @@ class FuturoJubiladoController extends Controller
 
                 // Buscar el registro por CUIL
                 $futuroJubilado = FuturoJubilado::where('cuil', $cuil)->first();
-                
+
                 if ($futuroJubilado) {
                     // Registro encontrado, actualizar los datos necesarios
                     $futuroJubilado->update([
@@ -189,10 +190,15 @@ class FuturoJubiladoController extends Controller
                         'fecha_actualiza' => $fecha_actualiza
                     ]);
                 }
-
             }
 
-            return response()->json(['message' => 'Datos insertados correctamente.'], 200);
+            // Almacenar el mensaje en la sesión
+            session()->flash('mensaje', '¡El proceso se completó con éxito!');
+
+
+            return redirect()->route('futurosjubilados.index');
+
+            // return response()->json(['message' => 'Datos insertados correctamente.'], 200);
         } else {
             // Manejar error en la respuesta de la API
             return response()->json(['message' => 'Error al consumir la API.'], 500);
@@ -211,16 +217,16 @@ class FuturoJubiladoController extends Controller
             'id' => 'required|exists:futurosjubilados,id',
             'comments' => 'required|string|max:255',
         ]);
-    
+
         $futuro = FuturoJubilado::find($request->id);
         if ($futuro) {
             $futuro->comments = $request->comments;
             $futuro->save();
         }
-    
+
         return response()->json(['success' => 'Comentario actualizado correctamente']);
     }
-    
+
 
 
 
@@ -228,35 +234,35 @@ class FuturoJubiladoController extends Controller
 
     public function show($id)
     {
-        
+
 
         $cuil = $id;
         $futuro = FuturoJubilado::where('CUIL', $cuil)->first();
 
-        
+
 
         //dd( $futuro );
 
-        $dni = substr($id, 2 , 8 );     
+        $dni = substr($id, 2, 8);
         //dd( 'dni', $dni)  ;
         $apiUrlHisto = 'http://dic-alex-tst.mendoza.gov.ar:3000/futurosjubiladoshisto/';
 
         //dd($apiUrlHisto . $dni);
-        
-        $response = Http::get( $apiUrlHisto . $dni);
+
+        $response = Http::get($apiUrlHisto . $dni);
 
         if ($response->successful()) {
             // Obtener los datos del JSON
             $data = $response->json()['data'];
             // dd($data );
         }
-        
+
 
         //dd( "no vino" ) ;
         $futuroJubilado = $response->json();
 
         // return view('futurojubilado.show', compact('futuroJubilado'));
-        return view('futurojubilado.futurosjubiladoshisto', compact('data','dni','futuro'));        
+        return view('futurojubilado.futurosjubiladoshisto', compact('data', 'dni', 'futuro'));
     }
 
     public function edit($id)

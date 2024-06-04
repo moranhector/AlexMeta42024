@@ -1,7 +1,33 @@
 @extends('layouts.app')
+
+<style>
+ 
+
+
+        /* En tu archivo de estilos CSS */
+        th {
+            color: #ffffff;
+            /* Cambia el color del texto de todos los <th> a blanco */
+        }
+
+        /* En tu archivo de estilos CSS */
+        thead {
+            background-color: #007bff;
+            /* Cambia el color de fondo de todos los <thead> */
+                    }
+    </style>
+
 @section('content')
 
+
+
 <div class="container">
+    @if (session()->has('mensaje'))
+    <div class="alert alert-success">
+        {{ session('mensaje') }}
+    </div>
+    @endif
+
     <h1>Futuros Jubilados</h1>
 
 
@@ -106,7 +132,8 @@
     <p>Total de futuros jubilados: {{ $totalJubilados }}</p>
     <!-- Tabla -->
     <!-- Tabla -->
-    <table class="table">
+    
+    <table class="table table-striped mt-2" id="futuros-table">        
         <thead>
             <tr>
                 <!-- <th>ID</th> -->

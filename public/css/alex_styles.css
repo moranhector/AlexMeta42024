@@ -155,7 +155,7 @@ table {
 }
 
 th {
-    background-color: blue;
+    background-color: #007bff;
     /* Color de fondo azul para las celdas de encabezado */
     color: white;
     /* Texto blanco para las celdas de encabezado */
@@ -169,7 +169,7 @@ td {
 }
 
 tfoot button {
-    background-color: blue;
+    background-color: #007bff;
     /* Color de fondo azul para el botón */
     color: white;
     /* Texto blanco para el botón */
@@ -179,7 +179,7 @@ tfoot button {
 }
 
 tfoot button:hover {
-    background-color: #0044cc;
+    background-color: #007bff;
     /* Cambio de color al pasar el cursor por encima */
 }
 
