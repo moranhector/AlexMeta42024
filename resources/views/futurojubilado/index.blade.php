@@ -14,8 +14,31 @@
         thead {
             background-color: #007bff;
             /* Cambia el color de fondo de todos los <thead> */
-                    }
-    </style>
+        }
+
+ 
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .card p {
+            margin: 0;
+            font-size: 1em;
+        }
+        .card .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+     
+        
+
+
+</style>
 
 @section('content')
 
@@ -63,9 +86,10 @@
                 <label for="estado">Selecciona un estado de trámite:</label>
                 <select id="estado" name="estado" class="form-control" onchange="this.form.submit()">
                     <option value="">Todos los estados</option>
+                    <option value="STI">Sin trámites iniciados</option>
                     @foreach ($estados as $estado)
                     <option value="{{ $estado->last_cod_jub }}" {{ request('estado') == $estado->last_cod_jub ? 'selected' : '' }}>
-                        {{ $estado->last_cod_jub }} - {{ $estado->last_cod_jub_desc }}
+                        {{ $estado->last_cod_jub }} {{ $estado->last_cod_jub_desc }}
                     </option>
                     @endforeach
                 </select>
@@ -129,8 +153,12 @@
 
 
 
-    <p>Total de futuros jubilados: {{ $totalJubilados }}</p>
-    <!-- Tabla -->
+    
+
+    <div class="card">
+        <p>Total de futuros jubilados: <span class="number">{{ $totalJubilados }}</span></p>
+    </div>    
+ 
     <!-- Tabla -->
     
     <table class="table table-striped mt-2" id="futuros-table">        
@@ -145,8 +173,6 @@
                 <th>RATS</th>
                 <th>Cod.</th>
                 <th>Obs</th>
-                <th></th>
-                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -178,6 +204,13 @@
     </table>
 
 
+    <div class="card mt-20">
+        <p>Total de futuros jubilados: <span class="number">{{ $totalJubilados }}</span></p>
+    </div>        
+
+    <div class="mt-20">
+        <p>Alex Futuros Jubilados - DIC 2024</p>
+    </div>    
 
     <!-- Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -274,6 +307,16 @@
 
 
     <!-- Modal -->
+
+
+
+
+
+
+
+
+
+
 
 </div>
 

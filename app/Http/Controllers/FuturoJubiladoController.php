@@ -24,6 +24,8 @@ class FuturoJubiladoController extends Controller
         $etiqueta = $request->input('etiqueta');
 
         $estado = $request->input('estado');
+
+// dd($estado)        ;
         $regimen = $request->input('regimen');
         $genero  = $request->input('genero');
 
@@ -48,9 +50,25 @@ class FuturoJubiladoController extends Controller
             $query->where('etiqueta', $etiqueta);
         }
 
-        if ($estado) {
-            $query->where('last_cod_jub', $estado);
-        }
+        // if ($estado) {
+        //     $query->where('last_cod_jub', $estado);
+        // }
+
+        if ($estado )
+        {  
+
+            // SELECT * FROM futurosjubilados WHERE last_cod_jub IS NULL OR last_cod_jub IN ('J01','NAP','ANSeS','-');
+            // STI SIN TRAMITE INICIADO
+            if ( $estado =='STI' )
+            {
+                $query->whereNull('last_cod_jub')
+                ->orWhereIn('last_cod_jub', ['J01', 'NAP', 'ANSeS', '-']);
+            }
+            else
+            {
+                $query->where('last_cod_jub', $estado);
+            }
+        }        
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -80,10 +98,42 @@ class FuturoJubiladoController extends Controller
 
         // ->where('last_cod_jub', 'like', 'J%')
 
+        // $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
+        //     ->distinct()
+        //     ->orderBy('last_cod_jub')
+        //     ->get();
+
+        //  $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
+        //     ->distinct()
+        //     ->orderByRaw("CASE WHEN last_cod_jub LIKE 'J%' THEN 0 ELSE 1 END, last_cod_jub")
+        //     ->get();
+
+        // $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
+        // ->distinct()
+        // ->orderByRaw("
+        //     CASE 
+        //         WHEN last_cod_jub LIKE 'J%' THEN 0
+        //         WHEN last_cod_jub LIKE 'O%' THEN 1
+        //         ELSE 2
+        //     END, 
+        //     last_cod_jub
+        // ")
+        // ->get();
+        
         $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
-            ->distinct()
-            ->orderBy('last_cod_jub')
-            ->get();
+        ->distinct()
+        ->whereNotNull('last_cod_jub')
+        ->where('last_cod_jub', '!=', '')
+        ->orderByRaw("
+            CASE 
+                WHEN last_cod_jub LIKE 'J%' THEN 0
+                WHEN last_cod_jub LIKE 'O%' THEN 1
+                ELSE 2
+            END, 
+            last_cod_jub
+        ")
+        ->get();        
+                    
 
         //dd($regimenes)    ;
 
@@ -213,9 +263,10 @@ class FuturoJubiladoController extends Controller
 
     public function store(Request $request)
     {
+ 
         $request->validate([
             'id' => 'required|exists:futurosjubilados,id',
-            'comments' => 'required|string|max:255',
+            'comments' => 'max:190'
         ]);
 
         $futuro = FuturoJubilado::find($request->id);

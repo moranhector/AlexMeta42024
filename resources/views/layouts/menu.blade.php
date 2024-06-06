@@ -34,9 +34,21 @@
     </a>
 </li>
 
+
+
+
+
+
+
+@php
+    $allowedUsers = ['victoria@mail', 'cano@mail','gonzalojerez@gobierno','creta@gobierno'];
+@endphp
+
 <li class="nav-item">
-    <a href="{{ route('futurosjubilados.index') }}" class="nav-link {{ Request::is('futurosjubilados') ? 'active' : '' }}">
-        <i class="fas fa-users nav-icon"></i>
-        <p>Futuros Jubilados</p>
-    </a>
+    @if(in_array(Auth::user()->email, $allowedUsers))
+        <a href="{{ route('futurosjubilados.index') }}" class="nav-link {{ Request::is('futurosjubilados') ? 'active' : '' }}">
+            <i class="fas fa-users nav-icon"></i>
+            <p>Futuros Jubilados</p>
+        </a>
+    @endif
 </li>
