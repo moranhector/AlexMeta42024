@@ -59,6 +59,14 @@
         </div>
     </div>
 
+    <div class="form-row">
+        <div class="form-group">
+            <label for="fechanacimiento">Fecha Nacimiento:</label>
+            <input type="text" class="form-control" id="fechanacimiento" name="fechanacimiento" value="{{ $futuro->fechanacimiento }}" readonly>
+        </div>
+
+    </div>
+
 
     <div class="form-group">
         <label for="comments">Comentarios</label>
@@ -67,29 +75,7 @@
         </textarea>
     </div>
 
-    <!-- "id" => 1
-    "cuil" => "27165537098"
-    "nombreapellido" => "PIZARRO, MARIA ALEJANDRA"
-    "fechanacimiento" => "1963-09-05"
-    "edad" => 60
-    "fechaingreso" => "1995-01-01"
-    "genero" => "F"
-    "periodo" => "202404"
-    "descripcionuor" => "Dir de Fiscaliz, Control y Tecn. Agroind."
-    "dependencia" => "Direccion de Fiscalizac"
-    "etiqueta" => "MIN ECONOMIA Y ENER"
-    "rats" => "510302"
-    "clase" => 8
-    "comments" => "ya vimos el caso"
-    "last_cod_jub" => "J01"
-    "last_cod_jub_desc" => "Sistema de Reparto"
-    "last_fecha_desde" => "1995-01-01"
-    "last_fecha_hasta" => "4000-01-01"
-    "last_observacion" => null
-    "id_secuser" => "BSIMONOVICH"
-    "fecha_actualiza" => "2023-05-23"
-    "created_at" => "2024-05-29 15:53:09"
-    "updated_at" => "2024-05-30 12:05:11"     -->
+
 
 
     <table class="table table-bordered">

@@ -9,6 +9,9 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+// EXCEL
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\FuturosJubiladosExport;
 
 
 class FuturoJubiladoController extends Controller
@@ -16,27 +19,15 @@ class FuturoJubiladoController extends Controller
     //protected $apiUrl = 'http://localhost:3000/excel_jubilaciones_detalle_etiqueta/';
     protected $apiUrl = 'http://dic-alex-tst.mendoza.gov.ar:3000/excel_jubilaciones_detalle_etiqueta/';
 
-
-
-
     public function index(Request $request)
     {
         $etiqueta = $request->input('etiqueta');
-
         $estado = $request->input('estado');
-
-// dd($estado)        ;
         $regimen = $request->input('regimen');
         $genero  = $request->input('genero');
-
         $search = $request->input('search');
-
         $comment = $request->input('comment');
-
         $query = FuturoJubilado::query();
-
-
-
 
         if ($regimen) {
             $query->where(DB::raw('LEFT(rats, 2)'), $regimen);
@@ -50,10 +41,6 @@ class FuturoJubiladoController extends Controller
             $query->where('etiqueta', $etiqueta);
         }
 
-        // if ($estado) {
-        //     $query->where('last_cod_jub', $estado);
-        // }
-
         if ($estado )
         {  
 
@@ -61,8 +48,10 @@ class FuturoJubiladoController extends Controller
             // STI SIN TRAMITE INICIADO
             if ( $estado =='STI' )
             {
-                $query->whereNull('last_cod_jub')
-                ->orWhereIn('last_cod_jub', ['J01', 'NAP', 'ANSeS', '-']);
+                $query->where(function ($q) {
+                    $q->whereNull('last_cod_jub')
+                      ->orWhereIn('last_cod_jub', ['J01', 'NAP', 'ANSeS', '-']);
+                });                
             }
             else
             {
@@ -83,8 +72,10 @@ class FuturoJubiladoController extends Controller
             $query->whereNull('comments');
         }
 
-
+        // $futurosjubilados = $query->orderBy('fecha_actualiza','desc')->get();
         $futurosjubilados = $query->get();
+
+
         $totalJubilados = $futurosjubilados->count();
 
         $etiquetas = FuturoJubilado::select('etiqueta')->distinct()->orderBy('etiqueta')->get();
@@ -96,29 +87,6 @@ class FuturoJubiladoController extends Controller
             ->orderBy('regimen')
             ->get();
 
-        // ->where('last_cod_jub', 'like', 'J%')
-
-        // $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
-        //     ->distinct()
-        //     ->orderBy('last_cod_jub')
-        //     ->get();
-
-        //  $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
-        //     ->distinct()
-        //     ->orderByRaw("CASE WHEN last_cod_jub LIKE 'J%' THEN 0 ELSE 1 END, last_cod_jub")
-        //     ->get();
-
-        // $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
-        // ->distinct()
-        // ->orderByRaw("
-        //     CASE 
-        //         WHEN last_cod_jub LIKE 'J%' THEN 0
-        //         WHEN last_cod_jub LIKE 'O%' THEN 1
-        //         ELSE 2
-        //     END, 
-        //     last_cod_jub
-        // ")
-        // ->get();
         
         $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
         ->distinct()
@@ -133,9 +101,14 @@ class FuturoJubiladoController extends Controller
             last_cod_jub
         ")
         ->get();        
-                    
 
-        //dd($regimenes)    ;
+
+        //dd($futurosjubilados)            ;
+        if ($request->has('export_excel')) {
+            return Excel::download(new FuturosJubiladosExport($futurosjubilados), 'futuros_jubilados.xlsx');
+        }
+
+
 
         return view(
             'futurojubilado.index',

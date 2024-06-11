@@ -41,7 +41,7 @@
 
 
 @php
-    $allowedUsers = ['victoria@mail', 'cano@mail','gonzalojerez@gobierno','creta@gobierno'];
+    $allowedUsers = ['victoria@mail', 'cano@mail','gonzalojerez@gobierno','creta@gobierno','rbordonaro@gobierno'];
 @endphp
 
 <li class="nav-item">

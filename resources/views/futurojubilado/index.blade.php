@@ -1,43 +1,38 @@
 @extends('layouts.app')
 
 <style>
- 
+    /* En tu archivo de estilos CSS */
+    th {
+        color: #ffffff;
+        /* Cambia el color del texto de todos los <th> a blanco */
+    }
+
+    /* En tu archivo de estilos CSS */
+    thead {
+        background-color: #007bff;
+        /* Cambia el color de fondo de todos los <thead> */
+    }
 
 
-        /* En tu archivo de estilos CSS */
-        th {
-            color: #ffffff;
-            /* Cambia el color del texto de todos los <th> a blanco */
-        }
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        /* En tu archivo de estilos CSS */
-        thead {
-            background-color: #007bff;
-            /* Cambia el color de fondo de todos los <thead> */
-        }
+    .card p {
+        margin: 0;
+        font-size: 1em;
+    }
 
- 
-        .card {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            display: inline-block;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .card p {
-            margin: 0;
-            font-size: 1em;
-        }
-        .card .number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #333;
-        }
-     
-        
-
-
+    .card .number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #333;
+    }
 </style>
 
 @section('content')
@@ -99,6 +94,11 @@
                 <label for="search">Buscar persona:</label>
                 <input type="text" id="search" name="search" class="form-control" value="{{ request('search') }}" placeholder="Buscar por nombre o CUIL">
             </div>
+
+
+
+
+
         </div>
 
 
@@ -143,9 +143,19 @@
         </div>
 
 
+        <div class="row">
+            <div class="col-md-10">
+                <!-- Botón para buscar -->
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+            <div class="col-md-2 text-right">
+                <!-- Botón para exportar los datos a Excel -->
+                <button type="submit" name="export_excel" value="1" class="btn btn-success">Exportar a Excel</button>
+            </div>
+        </div>
 
 
-        <button type="submit" class="btn btn-primary">Buscar</button>
+
 
 
     </form>
@@ -153,25 +163,27 @@
 
 
 
-    
+
 
     <div class="card">
         <p>Total de futuros jubilados: <span class="number">{{ $totalJubilados }}</span></p>
-    </div>    
- 
+    </div>
+
     <!-- Tabla -->
-    
-    <table class="table table-striped mt-2" id="futuros-table">        
+
+    <table class="table table-striped mt-2" id="futuros-table">
         <thead>
             <tr>
                 <!-- <th>ID</th> -->
                 <th>CUIL</th>
                 <th>Nombres</th>
                 <th>Edad</th>
+                <th>Fecha Nac.</th>
                 <th>UOR</th>
                 <th>Institución</th>
                 <th>RATS</th>
                 <th>Cod.</th>
+                <th>Días</th>
                 <th>Obs</th>
                 <th></th>
             </tr>
@@ -182,16 +194,39 @@
                 <td>{{ $futuro->cuil }}</td>
                 <td>{{ $futuro->nombreapellido }}</td>
                 <td>{{ $futuro->edad }}</td>
+                <td>{{ Carbon\Carbon::parse($futuro->fechanacimiento)->format('d/m/Y') }}</td>
                 <td data-toggle="tooltip" title="{{ $futuro->descripcionuor }} {{ $futuro->dependencia }}">{{ substr($futuro->descripcionuor, 0, 20) }} {{ substr($futuro->dependencia, 0, 20) }}</td>
                 <td>{{ $futuro->etiqueta }}</td>
                 <td>{{ $futuro->rats }}</td>
                 <td data-toggle="tooltip" title="{{ $futuro->last_cod_jub_desc }}">{{ $futuro->last_cod_jub }}</td>
+
+                @if (!empty($futuro->fecha_actualiza))
+                <td data-toggle="tooltip" title="{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->format('d/m/Y') }}">{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->diffInDays() }}</td>
+                @else
+                <td data-toggle="tooltip" title="Sin trámites"> s/t </td>
+
+                @endif
+
+
+
+
+
                 <td class="comments-column" id="comments-{{ $futuro->id }}">{{ $futuro->comments }}</td>
                 <!-- <td>
                     <a href="{ { route('futurojubilado.show', $futuro->cuil) } }" class="btn btn-info">Ver</a>
                 </td> -->
                 <td>
-                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ $futuro->id }}" data-cuil="{{ $futuro->cuil }}" data-nombreapellido="{{ $futuro->nombreapellido }}" data-comments="{{ $futuro->comments }}">Edit</button>
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ $futuro->id }}" data-cuil="{{ $futuro->cuil }}" data-nombreapellido="{{ $futuro->nombreapellido }}" data-fechanacimiento="{{ Carbon\Carbon::parse($futuro->fechanacimiento)->format('d/m/Y') }}" data-edad="{{ $futuro->edad }}" @if (!empty($futuro->fecha_actualiza))
+                        data-fechaactualiza="{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->format('d/m/Y') }}"
+                        data-diast="{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->diffInDays() }}"
+                        @else
+                        data-fechaactualiza="Sin Trámites"
+                        data-diast="s/t"
+                        @endif
+
+                        data-uor= "{{ $futuro->descripcionuor }} {{ $futuro->dependencia }}"
+
+                        data-comments="{{ $futuro->comments }}">Edit</button>
                     </button>
 
                 </td>
@@ -206,11 +241,11 @@
 
     <div class="card mt-20">
         <p>Total de futuros jubilados: <span class="number">{{ $totalJubilados }}</span></p>
-    </div>        
+    </div>
 
     <div class="mt-20">
         <p>Alex Futuros Jubilados - DIC 2024</p>
-    </div>    
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -262,6 +297,53 @@
 
                         </div>
 
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label for="uor">UOR</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="uor" name="uor" value=" " readonly>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label for="fechanacimiento">Fecha Nacimiento</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="fechanacimiento" name="fechanacimiento" value=" " readonly>
+                            </div>
+                            <div class="col-md-1">
+                                <label for="edad">Edad</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="edad" name="edad" value=" " readonly>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label for="fechaactualiza">Fecha Actualización</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="fechaactualiza" name="fechaactualiza" value=" " readonly>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="diast">Días Transcurridos</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="diast" name="diast" value=" " readonly>
+                            </div>
+
+
+                        </div>
+
+
 
 
 
@@ -277,7 +359,22 @@
 
                         </div>
                         <div class="form-group">
-                            <label>Historial de Trámites</label>
+
+                            <div>
+
+                                <label>Historial de Trámites</label>
+
+
+                                <!-- Botón para exportar los datos a Excel -->
+                                <button type="submit" id= "export_excel2" 
+                                 class="btn btn-success">Exportar a Excel</button>
+
+
+
+
+                            </div>
+
+
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -321,6 +418,7 @@
 </div>
 
 <script>
+    // FORMULARIO MODAL 
     $(document).ready(function() {
         $('#editModal').on('show.bs.modal', function(event) {
             console.log('ENTRO');
@@ -331,16 +429,28 @@
             console.log("cuil", cuil);
 
             console.log("dni", cuil.substring(2, 10));
-
+            //variables para obtener datos trasportados en BOTON EDIT
             var nombreapellido = button.data('nombreapellido');
+            var fechanacimiento = button.data('fechanacimiento');
+            var fechaactualiza = button.data('fechaactualiza');
+            var diast = button.data('diast');
+            var edad = button.data('edad');
+            var uor = button.data('uor');
             var comments = button.data('comments');
             var dni = cuil.substring(2, 10);
 
             var modal = $(this);
+
+            //Asignar Valor a elementos del formulario MODAL
             modal.find('.modal-body #id').val(id);
             modal.find('.modal-body #cuil').val(cuil);
             modal.find('.modal-body #dni').val(dni);
             modal.find('.modal-body #nombreapellido').val(nombreapellido);
+            modal.find('.modal-body #fechanacimiento').val(fechanacimiento);
+            modal.find('.modal-body #fechaactualiza').val(fechaactualiza);
+            modal.find('.modal-body #diast').val(diast);
+            modal.find('.modal-body #edad').val(edad);
+            modal.find('.modal-body #uor').val(uor);
             modal.find('.modal-body #comments').val(comments);
 
             // Limpiar la tabla antes de llenarla
@@ -431,6 +541,69 @@
     });
 </script>
 
+
+
+
+
+<script>
+  document.getElementById('export_excel2').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevenir el envío del formulario
+
+    // Capturar los datos del formulario
+    var formData = new FormData(document.getElementById('editForm'));
+    var data = {};
+    formData.forEach((value, key) => { data[key] = value });
+
+    // Convertir los datos a una matriz adecuada para SheetJS
+    var dataArray = [
+      ["Nombre y Apellido", data.nombreapellido],
+      ["CUIL", data.cuil],
+      ["DNI", data.dni],
+      ["Id M4", data.idM4],
+      ["UOR", data.uor],
+      ["Fecha Nacimiento", data.fechanacimiento],
+      ["Edad", data.edad],
+      ["Fecha Actualización", data.fechaactualiza],
+      ["Días Transcurridos", data.diast],
+      ["Comentarios", data.comments],
+      [" ", " "]
+    ];
+
+    // Capturar los datos de la tabla de historial de trámites
+    var tramitesTable = document.getElementById('tramites-table-body');
+    var tramitesData = [];
+    tramitesTable.querySelectorAll('tr').forEach(function(row) {
+      var rowData = [];
+      row.querySelectorAll('td').forEach(function(cell) {
+        rowData.push(cell.textContent);
+      });
+      tramitesData.push(rowData);
+    });
+
+    // Agregar los datos de la tabla al array de datos
+    if (tramitesData.length > 0) {
+      dataArray.push(["Historial de Trámites"]);
+      dataArray.push(["F.Inicio", "F.Fin", "Trámite", "Observación", "Usuario", "Actualizado"]);
+      dataArray = dataArray.concat(tramitesData);
+    }
+
+    // Crear un libro de trabajo y una hoja de trabajo
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(dataArray);
+
+    // Agregar la hoja de trabajo al libro de trabajo
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    // Exportar el archivo Excel
+    XLSX.writeFile(wb, 'reporte-' + data.nombreapellido + '.xlsx');
+  });
+</script>
+
+
+ 
+
+
+ 
 
 
 </div>
