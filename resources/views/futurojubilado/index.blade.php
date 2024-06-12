@@ -494,6 +494,11 @@
         });
 
         function formatDate(dateString) {
+            console.log( dateString );
+            if ( dateString == '4000-01-01T00:00:00.000Z' )
+            {
+                return '  /  /  ';    
+            }
             var date = new Date(dateString);
             var day = ('0' + date.getDate()).slice(-2);
             var month = ('0' + (date.getMonth() + 1)).slice(-2);
