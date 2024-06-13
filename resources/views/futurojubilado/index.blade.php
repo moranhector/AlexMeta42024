@@ -144,10 +144,21 @@
 
 
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-7">
                 <!-- Botón para buscar -->
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </div>
+            <div class="col-md-3 text-right">
+
+ 
+                <label>
+                    <input type="checkbox" id="mostrarjubilados" name="mostrarjubilados" onchange="this.form.submit()" {{ $mostrarjubilados ? 'checked' : '' }}>
+                    Mostrar Jubilados
+                </label>
+
+
+            </div>
+
             <div class="col-md-2 text-right">
                 <!-- Botón para exportar los datos a Excel -->
                 <button type="submit" name="export_excel" value="1" class="btn btn-success">Exportar a Excel</button>
@@ -366,8 +377,7 @@
 
 
                                 <!-- Botón para exportar los datos a Excel -->
-                                <button type="submit" id= "export_excel2" 
-                                 class="btn btn-success">Exportar a Excel</button>
+                                <button type="submit" id="export_excel2" class="btn btn-success">Exportar a Excel</button>
 
 
 
@@ -494,10 +504,9 @@
         });
 
         function formatDate(dateString) {
-            console.log( dateString );
-            if ( dateString == '4000-01-01T00:00:00.000Z' )
-            {
-                return '  /  /  ';    
+            console.log(dateString);
+            if (dateString == '4000-01-01T00:00:00.000Z') {
+                return '  /  /  ';
             }
             var date = new Date(dateString);
             var day = ('0' + date.getDate()).slice(-2);
@@ -551,64 +560,66 @@
 
 
 <script>
-  document.getElementById('export_excel2').addEventListener('click', function(event) {
-    event.preventDefault(); // Prevenir el envío del formulario
+    document.getElementById('export_excel2').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevenir el envío del formulario
 
-    // Capturar los datos del formulario
-    var formData = new FormData(document.getElementById('editForm'));
-    var data = {};
-    formData.forEach((value, key) => { data[key] = value });
+        // Capturar los datos del formulario
+        var formData = new FormData(document.getElementById('editForm'));
+        var data = {};
+        formData.forEach((value, key) => {
+            data[key] = value
+        });
 
-    // Convertir los datos a una matriz adecuada para SheetJS
-    var dataArray = [
-      ["Nombre y Apellido", data.nombreapellido],
-      ["CUIL", data.cuil],
-      ["DNI", data.dni],
-      ["Id M4", data.idM4],
-      ["UOR", data.uor],
-      ["Fecha Nacimiento", data.fechanacimiento],
-      ["Edad", data.edad],
-      ["Fecha Actualización", data.fechaactualiza],
-      ["Días Transcurridos", data.diast],
-      ["Comentarios", data.comments],
-      [" ", " "]
-    ];
+        // Convertir los datos a una matriz adecuada para SheetJS
+        var dataArray = [
+            ["Nombre y Apellido", data.nombreapellido],
+            ["CUIL", data.cuil],
+            ["DNI", data.dni],
+            ["Id M4", data.idM4],
+            ["UOR", data.uor],
+            ["Fecha Nacimiento", data.fechanacimiento],
+            ["Edad", data.edad],
+            ["Fecha Actualización", data.fechaactualiza],
+            ["Días Transcurridos", data.diast],
+            ["Comentarios", data.comments],
+            [" ", " "]
+        ];
 
-    // Capturar los datos de la tabla de historial de trámites
-    var tramitesTable = document.getElementById('tramites-table-body');
-    var tramitesData = [];
-    tramitesTable.querySelectorAll('tr').forEach(function(row) {
-      var rowData = [];
-      row.querySelectorAll('td').forEach(function(cell) {
-        rowData.push(cell.textContent);
-      });
-      tramitesData.push(rowData);
+        // Capturar los datos de la tabla de historial de trámites
+        var tramitesTable = document.getElementById('tramites-table-body');
+        var tramitesData = [];
+        tramitesTable.querySelectorAll('tr').forEach(function(row) {
+            var rowData = [];
+            row.querySelectorAll('td').forEach(function(cell) {
+                rowData.push(cell.textContent);
+            });
+            tramitesData.push(rowData);
+        });
+
+        // Agregar los datos de la tabla al array de datos
+        if (tramitesData.length > 0) {
+            dataArray.push(["Historial de Trámites"]);
+            dataArray.push(["F.Inicio", "F.Fin", "Trámite", "Observación", "Usuario", "Actualizado"]);
+            dataArray = dataArray.concat(tramitesData);
+        }
+
+        // Crear un libro de trabajo y una hoja de trabajo
+        var wb = XLSX.utils.book_new();
+        var ws = XLSX.utils.aoa_to_sheet(dataArray);
+
+        // Agregar la hoja de trabajo al libro de trabajo
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+        // Exportar el archivo Excel
+        XLSX.writeFile(wb, 'reporte-' + data.nombreapellido + '.xlsx');
     });
-
-    // Agregar los datos de la tabla al array de datos
-    if (tramitesData.length > 0) {
-      dataArray.push(["Historial de Trámites"]);
-      dataArray.push(["F.Inicio", "F.Fin", "Trámite", "Observación", "Usuario", "Actualizado"]);
-      dataArray = dataArray.concat(tramitesData);
-    }
-
-    // Crear un libro de trabajo y una hoja de trabajo
-    var wb = XLSX.utils.book_new();
-    var ws = XLSX.utils.aoa_to_sheet(dataArray);
-
-    // Agregar la hoja de trabajo al libro de trabajo
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-    // Exportar el archivo Excel
-    XLSX.writeFile(wb, 'reporte-' + data.nombreapellido + '.xlsx');
-  });
 </script>
 
 
- 
 
 
- 
+
+
 
 
 </div>

@@ -27,7 +27,29 @@ class FuturoJubiladoController extends Controller
         $genero  = $request->input('genero');
         $search = $request->input('search');
         $comment = $request->input('comment');
-        $query = FuturoJubilado::query();
+
+        $maxPeriodo = FuturoJubilado::max('PERIODO'); // Obtener el último perido trabajado
+        
+        $mostrarjubilados = $request->input('mostrarjubilados');
+
+        if ( $mostrarjubilados )
+        {
+            $query = FuturoJubilado::query();            
+
+        }
+        else
+        {
+            $query = FuturoJubilado::where('PERIODO', $maxPeriodo);
+        }
+
+
+
+
+
+       
+       
+
+
 
         if ($regimen) {
             $query->where(DB::raw('LEFT(rats, 2)'), $regimen);
@@ -112,7 +134,7 @@ class FuturoJubiladoController extends Controller
 
         return view(
             'futurojubilado.index',
-            compact('futurosjubilados', 'totalJubilados', 'etiquetas', 'estados', 'regimenes', 'generos')
+            compact('futurosjubilados', 'totalJubilados', 'etiquetas', 'estados', 'regimenes', 'generos','mostrarjubilados')
         );
     }
 
