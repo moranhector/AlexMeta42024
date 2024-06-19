@@ -190,12 +190,13 @@
                 <th>Nombres</th>
                 <th>Edad</th>
                 <th>Fecha Nac.</th>
-                <th>UOR</th>
-                <th>Institución</th>
-                <th>RATS</th>
-                <th>Cod.</th>
-                <th>Días</th>
-                <th>Obs</th>
+                <th>Lugar de Trabajo</th>
+                <th>Dependencia</th>
+                <!-- <th>RATS</th> -->
+                <th>Código Trámite</th>
+                <th>Días desde último movimiento</th>
+                <th>Observación Usuario responsable</th>
+                <th>Observación Personal RRHH</th>
                 <th></th>
             </tr>
         </thead>
@@ -208,7 +209,7 @@
                 <td>{{ Carbon\Carbon::parse($futuro->fechanacimiento)->format('d/m/Y') }}</td>
                 <td data-toggle="tooltip" title="{{ $futuro->descripcionuor }} {{ $futuro->dependencia }}">{{ substr($futuro->descripcionuor, 0, 20) }} {{ substr($futuro->dependencia, 0, 20) }}</td>
                 <td>{{ $futuro->etiqueta }}</td>
-                <td>{{ $futuro->rats }}</td>
+                <!-- <td>{ { $futuro->rats } }</td> -->
                 <td data-toggle="tooltip" title="{{ $futuro->last_cod_jub_desc }}">{{ $futuro->last_cod_jub }}</td>
 
                 @if (!empty($futuro->fecha_actualiza))
@@ -218,11 +219,9 @@
 
                 @endif
 
-
-
-
-
+                <td class="comments-column" id="comments-{{ $futuro->id }}">{{ $futuro->last_observacion }}</td>
                 <td class="comments-column" id="comments-{{ $futuro->id }}">{{ $futuro->comments }}</td>
+
                 <!-- <td>
                     <a href="{ { route('futurojubilado.show', $futuro->cuil) } }" class="btn btn-info">Ver</a>
                 </td> -->
@@ -236,7 +235,7 @@
                         @endif
 
                         data-uor= "{{ $futuro->descripcionuor }} {{ $futuro->dependencia }}"
-
+                        data-rats= "{{ $futuro->rats }}"
                         data-comments="{{ $futuro->comments }}">Edit</button>
                     </button>
 
@@ -332,6 +331,13 @@
                             <div class="col-md-2">
                                 <input type="text" class="form-control" id="edad" name="edad" value=" " readonly>
                             </div>
+                            <div class="col-md-1">
+                                <label for="rats">Rats</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" id="rats" name="rats" value=" " readonly>
+                            </div>
+
 
                         </div>
 
@@ -446,6 +452,7 @@
             var diast = button.data('diast');
             var edad = button.data('edad');
             var uor = button.data('uor');
+            var rats = button.data('rats');
             var comments = button.data('comments');
             var dni = cuil.substring(2, 10);
 
@@ -461,6 +468,7 @@
             modal.find('.modal-body #diast').val(diast);
             modal.find('.modal-body #edad').val(edad);
             modal.find('.modal-body #uor').val(uor);
+            modal.find('.modal-body #rats').val(rats);
             modal.find('.modal-body #comments').val(comments);
 
             // Limpiar la tabla antes de llenarla

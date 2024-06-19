@@ -371,9 +371,9 @@
 <script>
     // Inicialización del DataTable
     new DataTable('#table_instituciones', {
-        language: {
-            url: 'http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json' // Asegúrate de tener acceso a esta URL
-        },
+        // language: {
+        //     url: 'http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json' // Asegúrate de tener acceso a esta URL
+        // },
         ajax: SERVER_NODE + '/instituciones',
         columns: [{
                 data: 'UOR'

@@ -48,3 +48,13 @@ project://app\Http\Controllers\historialoperacionesController.php#665
 
 project://app\Http\Controllers
 project://resources\views
+
+
+FUTUROS JUBILADOS
+TABLA DE REGISTROS PRINCIPAL
+project://resources\views\futurojubilado\index.blade.php#174
+
+FORMULARIO MODAL FUTUROS JUBILADOS
+
+
+project://resources\views\futurojubilado\index.blade.php#385

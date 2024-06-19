@@ -43,16 +43,10 @@ class FuturoJubiladoController extends Controller
         }
 
 
-
-
-
-       
-       
-
-
-
         if ($regimen) {
-            $query->where(DB::raw('LEFT(rats, 2)'), $regimen);
+            $regimen = substr( " ".$regimen, -2)  ;
+            dump($regimen);
+            $query->where(DB::raw('LEFT( RIGHT( CONCAT(" ", rats) , 7), 2)'), $regimen);
         }
 
         if ($genero) {
@@ -104,7 +98,7 @@ class FuturoJubiladoController extends Controller
 
         $generos   = FuturoJubilado::select('genero')->distinct()->orderBy('genero')->get();
 
-        $regimenes = FuturoJubilado::select(DB::raw('LEFT(rats, 2) as regimen'))
+        $regimenes = FuturoJubilado::select(DB::raw('LEFT( RIGHT( CONCAT(" ", rats) , 7), 2) as regimen') )
             ->distinct()
             ->orderBy('regimen')
             ->get();
@@ -214,6 +208,7 @@ class FuturoJubiladoController extends Controller
                 } else {
                     // No se encontró el registro, crear uno nuevo
                     FuturoJubilado::create([
+                        'id_meta4' => $item['STD_ID_PERSON'],
                         'cuil' => $item['CUIL'],
                         'nombreapellido' => $item['NOMBREAPELLIDO'],
                         'fechanacimiento' => $fechanacimiento,

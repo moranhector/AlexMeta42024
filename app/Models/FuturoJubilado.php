@@ -18,6 +18,7 @@ class FuturoJubilado extends Model
     // Los atributos que son asignables
     protected $fillable = [
         'cuil',
+        'id_meta4',
         'nombreapellido',
         'fechanacimiento',
         'edad',

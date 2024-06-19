@@ -1,13 +1,52 @@
-    <form method="GET" action="{{ route('futurosjubilados') }}">
+Necesito que traduzcas este ENDPOINT de NODE.JS a un método Laravel de un Controller
+que devuelva la misma estructura de datos JSON.
 
 
-        <label for="etiqueta">Filtrar por etiqueta:</label>
-        <select name="etiqueta" id="etiqueta">
-            <option value="" {{ request()->query('etiqueta') == '' ? 'selected' : '' }}>Todos</option>
-            <option value="Vencido" {{ request()->query('etiqueta') == 'Vencido' ? 'selected' : '' }}>Vencido</option>
-            <option value="Vigente" {{ request()->query('etiqueta') == 'Vigente' ? 'selected' : '' }}>Vigente</option>
-        </select>
+app.get('/excel_jubi_infocompleta/:gen', async (req, res) => {
+
+  const connection = await oracledb.getConnection(oracleConfig);
+
+  try {
+
+    const resultDefaultPeriod = await connection.execute(`
+    SELECT max(periodo) as max_periodo
+    FROM LAPN810P.CAR_SIGNOS
+  `);
+
+    periodo = resultDefaultPeriod.rows[0]['MAX_PERIODO'];
+
+    const GEN = req.params.gen;
 
 
-        <button type="submit">Buscar</button>
-    </form>
+    // Construir la cadena SQL sin ejecutarla
+    const sqlQuery = `
+  SELECT 
+    cuil, 
+    SUBSTR(nombreapellido, 1, 40) AS nombreapellido,
+    TO_CHAR(fechanacimiento, 'DD/MM/YYYY') AS fechanacimiento,
+    TO_CHAR(ROUND(TO_NUMBER(RTRIM(TRUNC(MONTHS_BETWEEN(SYSDATE, FECHANACIMIENTO) / 12))))) AS edad,    
+    TO_CHAR(fechaingreso, 'DD/MM/YYYY') AS fechaingreso,    
+    genero, periodo, s.car, s.jur, descripcionuor, s.dependencia, s.rats, s.clase, i.jur_descrip, i.uni_org_desc, i.dependencia, i.etiqueta      
+  FROM LAPN810P.vw_car_signos s
+  inner JOIN car_instituciones i ON
+    s.car = i.caracter AND
+    s.jur = i.jurisdiccion AND
+    s.uor = i.unidar_org AND
+    s.dep = i.nro_dep    
+  WHERE periodo = :periodo AND ajub = 'S' 
+    ${GEN ? 'AND s.genero = :genero' : ''} 
+`;
+
+     const resultJubilaciones = await connection.execute(sqlQuery, { periodo: periodo, genero: GEN });
+
+
+    const responseJson = {
+      data: resultJubilaciones.rows
+    };
+
+
+    res.json(responseJson); // Devolver el JSON como respuesta
+  } catch (error) {
+    res.status(500).json({ error: 'Ocurrió un error al ejecutar la consulta.' }); // Devolver un JSON de error
+  }
+});

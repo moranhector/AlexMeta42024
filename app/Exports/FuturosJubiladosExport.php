@@ -33,6 +33,7 @@ class FuturosJubiladosExport implements FromCollection, WithHeadings
                 'etiqueta' => $jubilado->etiqueta,
                 'rats' => $jubilado->rats,
                 'clase' => $jubilado->clase,
+                'last_observacion' => $jubilado->last_observacion,
                 'comments' => $jubilado->comments,
             ];
         });
@@ -47,12 +48,13 @@ class FuturosJubiladosExport implements FromCollection, WithHeadings
             'Edad',
             'Fecha de Ingreso',
             'Género',
-            'Descripción UOR',
+            'Unidad Org.',
+            'Lugar de Trabajo',
             'Dependencia',
-            'Jurisdicción',
             'RATS',
             'Clase',
-            'Comentarios'
+            'Observación Usuario responsable',
+            'Observación Personal RRHH'
         ];
     }
 }
