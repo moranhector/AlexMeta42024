@@ -34,7 +34,8 @@ class FuturoJubiladoController extends Controller
 
         if ( $mostrarjubilados )
         {
-            $query = FuturoJubilado::query();            
+            // $query = FuturoJubilado::query();     
+            $query = FuturoJubilado::where('PERIODO','<', $maxPeriodo);                   
 
         }
         else
@@ -128,7 +129,16 @@ class FuturoJubiladoController extends Controller
 
         return view(
             'futurojubilado.index',
-            compact('futurosjubilados', 'totalJubilados', 'etiquetas', 'estados', 'regimenes', 'generos','mostrarjubilados')
+            compact(
+                'futurosjubilados', 
+                'totalJubilados', 
+                'etiquetas', 
+                'estados', 
+                'regimenes', 
+                'generos',
+                'mostrarjubilados',
+                'maxPeriodo'
+            )
         );
     }
 

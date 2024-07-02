@@ -1,51 +1,55 @@
+<script>
+    document.getElementById('export_excel2').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevenir el envío del formulario
 
-Modificar el EXPORT a EXCEL para que los campos exportados con sus heading y datos sean los siguientes:
+        // Capturar los datos del formulario
+        var formData = new FormData(document.getElementById('editForm'));
+        var data = {};
+        formData.forEach((value, key) => {
+            data[key] = value
+        });
 
-
-        "cuil" 
-        "nombreapellido" 
-        "fechanacimiento" 
-        "edad" 
-        "fechaingreso" 
-        "genero" 
-        "periodo" 
-        "descripcionuor" 
-        "dependencia" 
-        "etiqueta" 
-        "rats" 
-        "clase" 
-        "comments" 
-
-El export actual es: 
-
-
-<?php
-
-namespace App\Exports;
-
-use App\Models\FuturoJubilado;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-
-class FuturosJubiladosExport implements FromCollection, WithHeadings
-{
-    protected $futurosjubilados;
-
-    public function __construct($futurosjubilados)
-    {
-        $this->futurosjubilados = $futurosjubilados;
-    }
-
-    public function collection()
-    {
-        return $this->futurosjubilados;
-    }
-
-    public function headings(): array
-    {
-        return [
-            'id','cuil', 'nombreapellido', 'fechanacimiento', 'fechaingreso', 'genero', 'periodo', 'car', 'jur', 
-            'descripcionuor', 'dependencia', 'rats', 'clase', 'jur_descrip', 'uni_org_desc', 'etiqueta'
+        // Convertir los datos a una matriz adecuada para SheetJS
+        var dataArray = [
+            ["Nombre y Apellido", data.nombreapellido],
+            ["CUIL", data.cuil],
+            ["DNI", data.dni],
+            // ["Id M4", data.id_meta4],
+            ["UOR", data.uor],
+            ["Fecha Nacimiento", data.fechanacimiento],
+            ["Edad", data.edad],
+            ["Fecha Actualización", data.fechaactualiza],
+            ["Días Transcurridos", data.diast],
+            ["Comentarios", data.comments],
+            [" ", " "]
         ];
-    }
-}
+
+        // Capturar los datos de la tabla de historial de trámites
+        var tramitesTable = document.getElementById('tramites-table-body');
+        var tramitesData = [];
+        tramitesTable.querySelectorAll('tr').forEach(function(row) {
+            var rowData = [];
+            row.querySelectorAll('td').forEach(function(cell) {
+                rowData.push(cell.textContent);
+            });
+            tramitesData.push(rowData);
+        });
+
+        // Agregar los datos de la tabla al array de datos
+        if (tramitesData.length > 0) {
+            dataArray.push(["Historial de Trámites"]);
+            dataArray.push(["F.Inicio", "F.Fin", "Trámite", "Observación", "Usuario", "Actualizado"]);
+            dataArray = dataArray.concat(tramitesData);
+        }
+
+        // Crear un libro de trabajo y una hoja de trabajo
+        var wb = XLSX.utils.book_new();
+        var ws = XLSX.utils.aoa_to_sheet(dataArray);
+
+        // Agregar la hoja de trabajo al libro de trabajo
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+        // Exportar el archivo Excel
+        XLSX.writeFile(wb, 'reporte-' + data.nombreapellido + '.xlsx');
+    });
+</script>

@@ -58,3 +58,7 @@ FORMULARIO MODAL FUTUROS JUBILADOS
 
 
 project://resources\views\futurojubilado\index.blade.php#385
+
+
+EXPORT EXCEL PRINCIPAL
+project://app\Exports\FuturosJubiladosExport.php

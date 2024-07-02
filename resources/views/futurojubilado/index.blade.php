@@ -33,13 +33,24 @@
         font-weight: bold;
         color: #333;
     }
+
+    .table-row-highlight {
+        background-color: #ffffff;
+
+    }
+
+    .table-row-normal {
+        background-color: #76d7c4;
+        /* verde */
+
+    }
 </style>
 
 @section('content')
 
 
 
-<div class="container">
+<div class="container" style="margin-left: 0px;">
     @if (session()->has('mensaje'))
     <div class="alert alert-success">
         {{ session('mensaje') }}
@@ -150,7 +161,7 @@
             </div>
             <div class="col-md-3 text-right">
 
- 
+
                 <label>
                     <input type="checkbox" id="mostrarjubilados" name="mostrarjubilados" onchange="this.form.submit()" {{ $mostrarjubilados ? 'checked' : '' }}>
                     Mostrar Jubilados
@@ -171,7 +182,38 @@
 
     </form>
 
+    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
+    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
+    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
 
+ 
+
+
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="panel-heading">
+                        <h5>Personas que cumplen edad jubilatoria en rango de fechas</h5>
+
+
+                    </div>
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"> </div>
+
+
+
+                    </div>
+
+                </div>
+            </div>
+            <input type="text" class="daterangepicker-field">
+            <button id="export-button">Descargar Informe</button>
+ 
+ 
+    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
+    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
+    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
 
 
 
@@ -182,71 +224,10 @@
 
     <!-- Tabla -->
 
-    <table class="table table-striped mt-2" id="futuros-table">
-        <thead>
-            <tr>
-                <!-- <th>ID</th> -->
-                <th>CUIL</th>
-                <th>Nombres</th>
-                <th>Edad</th>
-                <th>Fecha Nac.</th>
-                <th>Lugar de Trabajo</th>
-                <th>Dependencia</th>
-                <!-- <th>RATS</th> -->
-                <th>Código Trámite</th>
-                <th>Días desde último movimiento</th>
-                <th>Observación Usuario responsable</th>
-                <th>Observación Personal RRHH</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($futurosjubilados as $futuro)
-            <tr id="row-{{ $futuro->id }}">
-                <td>{{ $futuro->cuil }}</td>
-                <td>{{ $futuro->nombreapellido }}</td>
-                <td>{{ $futuro->edad }}</td>
-                <td>{{ Carbon\Carbon::parse($futuro->fechanacimiento)->format('d/m/Y') }}</td>
-                <td data-toggle="tooltip" title="{{ $futuro->descripcionuor }} {{ $futuro->dependencia }}">{{ substr($futuro->descripcionuor, 0, 20) }} {{ substr($futuro->dependencia, 0, 20) }}</td>
-                <td>{{ $futuro->etiqueta }}</td>
-                <!-- <td>{ { $futuro->rats } }</td> -->
-                <td data-toggle="tooltip" title="{{ $futuro->last_cod_jub_desc }}">{{ $futuro->last_cod_jub }}</td>
 
-                @if (!empty($futuro->fecha_actualiza))
-                <td data-toggle="tooltip" title="{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->format('d/m/Y') }}">{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->diffInDays() }}</td>
-                @else
-                <td data-toggle="tooltip" title="Sin trámites"> s/t </td>
-
-                @endif
-
-                <td class="comments-column" id="comments-{{ $futuro->id }}">{{ $futuro->last_observacion }}</td>
-                <td class="comments-column" id="comments-{{ $futuro->id }}">{{ $futuro->comments }}</td>
-
-                <!-- <td>
-                    <a href="{ { route('futurojubilado.show', $futuro->cuil) } }" class="btn btn-info">Ver</a>
-                </td> -->
-                <td>
-                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ $futuro->id }}" data-cuil="{{ $futuro->cuil }}" data-nombreapellido="{{ $futuro->nombreapellido }}" data-fechanacimiento="{{ Carbon\Carbon::parse($futuro->fechanacimiento)->format('d/m/Y') }}" data-edad="{{ $futuro->edad }}" @if (!empty($futuro->fecha_actualiza))
-                        data-fechaactualiza="{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->format('d/m/Y') }}"
-                        data-diast="{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->diffInDays() }}"
-                        @else
-                        data-fechaactualiza="Sin Trámites"
-                        data-diast="s/t"
-                        @endif
-
-                        data-uor= "{{ $futuro->descripcionuor }} {{ $futuro->dependencia }}"
-                        data-rats= "{{ $futuro->rats }}"
-                        data-comments="{{ $futuro->comments }}">Edit</button>
-                    </button>
-
-                </td>
-            </tr>
-
-
-
-            @endforeach
-        </tbody>
-    </table>
+    <!-- Tabla    project://resources\views\futurojubilado\table_principal.blade.php  -->
+    @include('futurojubilado.table_principal')
+    <!-- Tabla    project://resources\views\futurojubilado\table_principal.blade.php  -->
 
 
     <div class="card mt-20">
@@ -257,176 +238,9 @@
         <p>Alex Futuros Jubilados - DIC 2024</p>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document"> <!-- Cambiamos a modal-lg para hacerlo más grande -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <h5 class="modal-title" id="editModalLabel">Editar</h5> -->
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="editForm" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <input type="hidden" id="id" name="id">
-                        <input type="hidden" id="cuil" name="cuil">
-
-                        <div class="form-group row">
-                            <div class="col-md-3">
-                                <label for="nombreapellido">Nombre y Apellido</label>
-                            </div>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="nombreapellido" name="nombreapellido" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-3">
-                                <label for="cuil">CUIL</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" class="form-control" id="cuil" name="cuil" value=" " readonly>
-                            </div>
-
-                            <div class="col-md-1">
-                                <label for="dni">DNI</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" class="form-control" id="dni" name="dni" value=" " readonly>
-                            </div>
-
-                            <div class="col-md-1">
-                                <label for="idM4">Id M4</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" class="form-control" id="idM4" name="idM4" value=" " readonly>
-                            </div>
-
-
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-3">
-                                <label for="uor">UOR</label>
-                            </div>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="uor" name="uor" value=" " readonly>
-                            </div>
-
-                        </div>
-
-
-                        <div class="form-group row">
-                            <div class="col-md-3">
-                                <label for="fechanacimiento">Fecha Nacimiento</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" class="form-control" id="fechanacimiento" name="fechanacimiento" value=" " readonly>
-                            </div>
-                            <div class="col-md-1">
-                                <label for="edad">Edad</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" class="form-control" id="edad" name="edad" value=" " readonly>
-                            </div>
-                            <div class="col-md-1">
-                                <label for="rats">Rats</label>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="text" class="form-control" id="rats" name="rats" value=" " readonly>
-                            </div>
-
-
-                        </div>
-
-
-                        <div class="form-group row">
-                            <div class="col-md-3">
-                                <label for="fechaactualiza">Fecha Actualización</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" class="form-control" id="fechaactualiza" name="fechaactualiza" value=" " readonly>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label for="diast">Días Transcurridos</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="text" class="form-control" id="diast" name="diast" value=" " readonly>
-                            </div>
-
-
-                        </div>
-
-
-
-
-
-
-
-                        <div class="form-group row">
-                            <div class="col-md-3">
-                                <label for="comments">Comentarios</label>
-                            </div>
-                            <div class="col-md-9">
-                                <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-
-                            <div>
-
-                                <label>Historial de Trámites</label>
-
-
-                                <!-- Botón para exportar los datos a Excel -->
-                                <button type="submit" id="export_excel2" class="btn btn-success">Exportar a Excel</button>
-
-
-
-
-                            </div>
-
-
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>F.Inicio</th>
-                                        <th>F.Fin</th>
-                                        <th>Trámite</th>
-                                        <th>Observación</th>
-                                        <th>Usuario</th>
-                                        <th>Actualizado</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tramites-table-body">
-                                    <!-- Aquí se llenarán los datos de la API -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- Modal -->
-
-
-
-
-
-
-
+    <!-- Modal   project://resources\views\futurojubilado\modal.blade.php  -->
+    @include('futurojubilado.modal')
+    <!-- Modal   -->
 
 
 
@@ -453,6 +267,7 @@
             var edad = button.data('edad');
             var uor = button.data('uor');
             var rats = button.data('rats');
+            var id_meta4 = button.data('id_meta4');
             var comments = button.data('comments');
             var dni = cuil.substring(2, 10);
 
@@ -469,6 +284,7 @@
             modal.find('.modal-body #edad').val(edad);
             modal.find('.modal-body #uor').val(uor);
             modal.find('.modal-body #rats').val(rats);
+            modal.find('.modal-body #id_meta4').val(id_meta4);
             modal.find('.modal-body #comments').val(comments);
 
             // Limpiar la tabla antes de llenarla
@@ -487,7 +303,7 @@
 
                     tramites.forEach(function(tramite) {
 
-                        modal.find('.modal-body #idM4').val(tramite.ID_M4);
+                        //modal.find('.modal-body #idM4').val(tramite.ID_M4);
 
                         var formattedStartDate = formatDate(tramite.DT_START);
                         var formattedEndDate = formatDate(tramite.DT_END);
@@ -567,6 +383,8 @@
 
 
 
+
+
 <script>
     document.getElementById('export_excel2').addEventListener('click', function(event) {
         event.preventDefault(); // Prevenir el envío del formulario
@@ -630,7 +448,9 @@
 
 
 
+
 </div>
+
 
 
 

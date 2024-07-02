@@ -92,7 +92,7 @@
 </head>
 
 <!-- <body class="hold-transition sidebar-mini layout-fixed dark-mode""> -->
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
 <div class="wrapper" style="min-height: 1700px;">
     <!-- Main Header -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -254,6 +254,246 @@
 </script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/treemap.js"></script>
+
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+
+    <script src="js/variables_entorno.js"></script>
+
+    <script>
+    // Evento al hacer clic en el botón de exportar
+    $('#export-button').on('click', function() {
+        var dateRange = $('.daterangepicker-field').data('daterangepicker');
+
+        var startDate = dateRange.startDate.format('DD-MM-YYYY');
+        console.log(startDate);
+        var endDate = dateRange.endDate.format('DD-MM-YYYY');
+
+
+        var apiUrl = SERVER_NODE + '/alcanzan_edad_fechas/' + startDate + '/' + endDate;
+
+        var fileName = 'Personas_que_alcanzan_edad_jubilatoria' + startDate + '_' + endDate + '.xlsx';
+        console.log(apiUrl);
+        exportToExcel(apiUrl, fileName);
+    });
+</script>
+
+
+<script>
+
+
+$('.daterangepicker-field').daterangepicker({
+    "showDropdowns": true,
+    ranges: {
+        'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Enero': [moment().month(0).startOf('month'), moment().month(0).endOf('month')],
+                    'Febrero': [moment().month(1).startOf('month'), moment().month(1).endOf('month')],
+                    'Marzo': [moment().month(2).startOf('month'), moment().month(2).endOf('month')],
+                    'Abril': [moment().month(3).startOf('month'), moment().month(3).endOf('month')],
+                    'Mayo': [moment().month(4).startOf('month'), moment().month(4).endOf('month')],
+                    'Junio': [moment().month(5).startOf('month'), moment().month(5).endOf('month')],
+                    'Julio': [moment().month(6).startOf('month'), moment().month(6).endOf('month')],
+                    'Agosto': [moment().month(7).startOf('month'), moment().month(7).endOf('month')],
+                    'Septiembre': [moment().month(8).startOf('month'), moment().month(8).endOf('month')],
+                    'Octubre': [moment().month(9).startOf('month'), moment().month(9).endOf('month')],
+                    'Noviembre': [moment().month(10).startOf('month'), moment().month(10).endOf('month')],
+                    'Diciembre': [moment().month(11).startOf('month'), moment().month(11).endOf('month')]        
+    },
+    "locale": {
+        "format": "DD/MM/YYYY",
+        "separator": " - ",
+        "applyLabel": "Aplicar",
+        "cancelLabel": "Cancelar",
+        "fromLabel": "Desde",
+        "toLabel": "Hasta",
+        "customRangeLabel": "Personalizar",
+        "weekLabel": "W",
+        "daysOfWeek": [
+            "Dom",
+            "Lu",
+            "Mar",
+            "Mie",
+            "Jue",
+            "Vie",
+            "Sa"
+        ],
+        "monthNames": [
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
+            "Agosto",
+            "Septiembre",
+            "Octubre",
+            "Noviembre",
+            "Diciembre"
+        ],
+        "firstDay": 1
+    },
+    "alwaysShowCalendars": true,
+    "startDate": moment(),
+    "endDate": moment()
+}, function(start, end, label) {
+  console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+});
+
+
+
+</script>
+
+
+
+<script>
+    function exportToExcel(apiUrl, fileName) {
+        // Hacer la solicitud AJAX a la API para obtener los datos
+        console.log(' entra a export');
+
+
+        fetch(`${apiUrl}`)
+            .then(response => response.json())
+            .then(data => {
+                // Crear una hoja de cálculo
+                // Crear una hoja de cálculo
+                const workbook = XLSX.utils.book_new();
+
+
+                // Dar formato a las celdas de encabezados
+                const headerCellStyle = {
+                    fill: {
+                        fgColor: {
+                            rgb: 'FFC000'
+                        }, // Color de fondo (amarillo)
+                    },
+                    font: {
+                        color: {
+                            rgb: 'FFFFFF'
+                        }, // Color de texto (blanco)
+                        bold: true, // Texto en negrita
+                    },
+                };
+
+
+
+
+
+
+                // const worksheet = XLSX.utils.json_to_sheet(data.data, { header: Object.keys(data.data[0]) });
+
+
+                // Crear la hoja de cálculo con los datos
+                const worksheet = XLSX.utils.json_to_sheet(data.data, {
+                    header: Object.keys(data.data[0])
+                });
+
+
+                // const worksheet = XLSX.utils.json_to_sheet(data.data, {
+                //     header: Object.keys(data.data[0])
+                // }); // Especificar los encabezados usando Object.keys(data[0])                
+                console.log('Data received:', data.data); // Verifica la estructura de data en la consola
+
+                const range = XLSX.utils.decode_range(worksheet['!ref']); // Obtener el rango de celdas
+                for (let col = range.s.c; col <= range.e.c; col++) {
+                    const cellAddress = XLSX.utils.encode_cell({
+                        r: 0,
+                        c: col
+                    }); // Encabezado en la primera fila (r = 0)
+                    worksheet[cellAddress].s = headerCellStyle; // Aplicar el estilo de encabezado a cada celda de la primera fila
+                }
+
+                // Dar formato numérico a las celdas de datos (desde la segunda fila en adelante)
+                for (let row = range.s.r + 1; row <= range.e.r; row++) {
+                    for (let col = range.s.c; col <= range.e.c; col++) {
+                        const cellAddress = XLSX.utils.encode_cell({
+                            r: row,
+                            c: col
+                        });
+                        if (worksheet[cellAddress] && typeof worksheet[cellAddress].v === 'number') {
+                            worksheet[cellAddress].t = 'n';
+                            worksheet[cellAddress].z = "0.00"; // Formato numérico con dos decimales
+                        }
+                    }
+                }
+
+
+
+                // Agregar la hoja de cálculo al libro
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'Hoja1');
+
+
+
+
+
+                // Agregar título de encabezado
+                // const title = 'Título del Informe';
+                const title = fileName;
+                const titleCellStyle = {
+                    font: {
+                        color: {
+                            rgb: '000000' // Color de texto negro
+                        },
+                        bold: true,
+                        size: 14 // Tamaño de la fuente
+                    },
+                    alignment: {
+                        horizontal: 'center' // Alineación centrada
+                    },
+                };
+                const titleRow = XLSX.utils.json_to_sheet([{
+                    A: title
+                }], {
+                    skipHeader: true
+                });
+                XLSX.utils.sheet_add_json(titleRow, [{
+                    A: null
+                }], {
+                    skipHeader: true,
+                    origin: 'A2'
+                }); // Agregar fila en A2
+                XLSX.utils.sheet_add_json(titleRow, [{
+                    A: null
+                }], {
+                    skipHeader: true,
+                    origin: 'A3'
+                }); // Agregar fila en A3
+                XLSX.utils.book_append_sheet(workbook, titleRow, 'Título');
+
+
+
+
+
+
+
+                // Crear el archivo XLSX y convertirlo a un Blob
+                const excelBuffer = XLSX.write(workbook, {
+                    type: 'array',
+                    bookType: 'xlsx'
+                });
+                const blob = new Blob([excelBuffer], {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                });
+
+                // Crear un enlace para descargar el archivo
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName; // Nombre del archivo personalizado
+                a.click();
+
+                // Liberar el objeto URL
+                URL.revokeObjectURL(url);
+
+            })
+            .catch(error => console.error('Error al obtener los datos:', error));
+    }
+</script>
+
+
 
 
 @stack('third_party_scripts')
