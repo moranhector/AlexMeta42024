@@ -91,7 +91,7 @@ class FuturoJubiladoController extends Controller
 
         // $futurosjubilados = $query->orderBy('fecha_actualiza','desc')->get();
         $futurosjubilados = $query->get();
-
+        
 
         $totalJubilados = $futurosjubilados->count();
 

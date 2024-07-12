@@ -32,7 +32,7 @@
                 @if (!empty($futuro->fecha_actualiza))
                 <td data-toggle="tooltip" title="{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->format('d/m/Y') }}">{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->diffInDays() }}</td>
                 @else
-                <td data-toggle="tooltip" title="Sin trámites"> s/t </td>
+                <td data-toggle="tooltip" title="Sin trámites">Sin registros Meta4</td>
 
                 @endif
 
@@ -62,8 +62,8 @@
                             data-fechaactualiza="{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->format('d/m/Y') }}"
                             data-diast="{{ Carbon\Carbon::parse($futuro->fecha_actualiza)->diffInDays() }}"
                         @else
-                            data-fechaactualiza="Sin Trámites"
-                            data-diast="s/t"
+                            data-fechaactualiza="Sin registros Meta4"
+                            data-diast="Sin registros Meta4"
                         @endif
 
                         data-uor= "{{ $futuro->descripcionuor }} {{ $futuro->dependencia }}"
