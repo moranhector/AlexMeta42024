@@ -85,7 +85,7 @@
 
                         <div class="form-group row">
                             <div class="col-md-3">
-                                <label for="fechaactualiza">Fecha Actualización</label>
+                                <label for="fechaactualiza">Fecha Ultima Actualización</label>
                             </div>
                             <div class="col-md-2">
                                 <input type="text" class="form-control" id="fechaactualiza" name="fechaactualiza" value=" " readonly>

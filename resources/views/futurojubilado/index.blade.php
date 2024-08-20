@@ -153,6 +153,32 @@
 
         </div>
 
+        <!-- TERCERA FILA -->
+
+ 
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label for="usuario">Selecciona un Usuario:</label>
+                <select id="usuario" name="usuario" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todos los usuarios</option>
+                    @foreach ($usuarios as $usuario)
+
+
+                    <option value="{{ $usuario->usuario }}" {{ request('usuario') == $usuario->usuario ? 'selected' : '' }}>
+                        {{ $usuario->usuario }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+ 
+        </div>
+
+
+
+        <!-- FIN TERCERA FILA -->
+
+
 
         <div class="row">
             <div class="col-md-7">

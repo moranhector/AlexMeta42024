@@ -8,6 +8,11 @@ KyleDavidE.vscode-project-links
 
 project://routes\web.php
 
+
+    RUTA POR DEFECTO RUTA DE INICIO
+project://app\Providers\RouteServiceProvider.php    
+
+
 -C O N T R O L L E R S -
  
 

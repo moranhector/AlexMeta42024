@@ -21,7 +21,13 @@ class FuturoJubiladoController extends Controller
 
     public function index(Request $request)
     {
+        
+        $titulo = '';
+        
         $etiqueta = $request->input('etiqueta');
+
+        $usuario = $request->input('usuario');
+        
         $estado = $request->input('estado');
         $regimen = $request->input('regimen');
         $genero  = $request->input('genero');
@@ -43,26 +49,38 @@ class FuturoJubiladoController extends Controller
             $query = FuturoJubilado::where('PERIODO', $maxPeriodo);
         }
 
+        if ($etiqueta) {
+            $query->where('etiqueta', $etiqueta);
+            $titulo = $titulo.$etiqueta;
+        }
+
+        if ($usuario) {
+            $query->where('id_secuser', $usuario);
+            $titulo = $titulo.' Usuario '.$usuario;
+        }
+
+
 
         if ($regimen) {
+
+            $titulo = $titulo.' Regimen '.$regimen ;
+
             $regimen = substr( " ".$regimen, -2)  ;
-            dump($regimen);
             $query->where(DB::raw('LEFT( RIGHT( CONCAT(" ", rats) , 7), 2)'), $regimen);
         }
 
         if ($genero) {
+            $titulo = $titulo.' Genero '.$genero ;            
             $query->where('genero', $genero);
         }
 
-        if ($etiqueta) {
-            $query->where('etiqueta', $etiqueta);
-        }
+
 
         if ($estado )
         {  
 
-            // SELECT * FROM futurosjubilados WHERE last_cod_jub IS NULL OR last_cod_jub IN ('J01','NAP','ANSeS','-');
-            // STI SIN TRAMITE INICIADO
+            $titulo = $titulo.' Estado Trámite '.$estado ;
+
             if ( $estado =='STI' )
             {
                 $query->where(function ($q) {
@@ -97,6 +115,12 @@ class FuturoJubiladoController extends Controller
 
         $etiquetas = FuturoJubilado::select('etiqueta')->distinct()->orderBy('etiqueta')->get();
 
+        $usuarios  = FuturoJubilado::select('id_secuser as usuario')
+            ->where('id_secuser', '!=', '')
+            ->distinct()
+            ->orderBy('id_secuser')->get();
+        
+
         $generos   = FuturoJubilado::select('genero')->distinct()->orderBy('genero')->get();
 
         $regimenes = FuturoJubilado::select(DB::raw('LEFT( RIGHT( CONCAT(" ", rats) , 7), 2) as regimen') )
@@ -122,7 +146,8 @@ class FuturoJubiladoController extends Controller
 
         //dd($futurosjubilados)            ;
         if ($request->has('export_excel')) {
-            return Excel::download(new FuturosJubiladosExport($futurosjubilados), 'futuros_jubilados.xlsx');
+            return Excel::download(new FuturosJubiladosExport($futurosjubilados, $titulo),
+             'futuros_jubilados '.$titulo.'.xlsx');
         }
 
 
@@ -133,6 +158,7 @@ class FuturoJubiladoController extends Controller
                 'futurosjubilados', 
                 'totalJubilados', 
                 'etiquetas', 
+                'usuarios', 
                 'estados', 
                 'regimenes', 
                 'generos',

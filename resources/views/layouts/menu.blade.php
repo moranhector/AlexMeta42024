@@ -28,9 +28,9 @@
 </li>
 
 <li class="nav-item">
-    <a href="{{ route('personas') }}" class="nav-link {{ Request::is('personas') ? 'active' : '' }}">
+    <a href="{{ route('busca_personas') }}" class="nav-link {{ Request::is('busca_personas') ? 'active' : '' }}">
         <i class="fas fa-user nav-icon"></i>
-        <p>Personas</p>
+        <p>Buscar Personas</p>
     </a>
 </li>
 
@@ -51,4 +51,12 @@
             <p>Futuros Jubilados</p>
         </a>
     @endif
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('personas.index') }}" class="nav-link {{ Request::is('personas') ? 'active' : '' }}">
+        <i class="fa fa-users-cog nav-icon"></i>
+        <p>Usuarios M4</p>
+    </a>
 </li>
