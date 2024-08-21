@@ -155,7 +155,7 @@
 
         <!-- TERCERA FILA -->
 
- 
+
         <div class="row">
             <div class="col-md-4 form-group">
                 <label for="usuario">Selecciona un Usuario:</label>
@@ -171,7 +171,28 @@
                 </select>
             </div>
 
- 
+            <div class="col-md-2 text-right">
+                <!-- Botón para abrir Ventana Modal -->
+                @if(request()->has('usuario'))
+                <a href="{{ route('futurojubilados.seguimientoUsuarios', ['m4user' => request()->get('usuario')]) }}" class="btn">
+                    Seguimiento
+                </a>
+                @else
+                <button
+                    name="historial"
+                    value="1"
+                    class="btn"
+                    disabled>
+                    Seguimiento
+                </button>
+                @endif
+            </div>
+
+
+
+
+
+
         </div>
 
 
@@ -212,31 +233,31 @@
     <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
     <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
 
- 
-
-
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="panel-heading">
-                        <h5>Personas que cumplen edad jubilatoria en rango de fechas</h5>
-
-
-                    </div>
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"> </div>
 
 
 
-                    </div>
+    <div class="card-body">
+        <div class="row no-gutters align-items-center">
+            <div class="panel-heading">
+                <h5>Personas que cumplen edad jubilatoria en rango de fechas</h5>
 
-                </div>
+
             </div>
-            <input type="text" class="daterangepicker-field">
-            <button id="export-button">Descargar Informe</button>
- 
- 
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                </div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800"> </div>
+
+
+
+            </div>
+
+        </div>
+    </div>
+    <input type="text" class="daterangepicker-field">
+    <button id="export-button">Descargar Informe</button>
+
+
     <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
     <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
     <!-- Personas que cumplen edad jubilatoria en rango de fechas -->

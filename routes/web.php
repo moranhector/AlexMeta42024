@@ -80,3 +80,11 @@ Route::post('/futurosjubilados/show', [FuturoJubiladoController::class, 'show'])
 Route::resource('personas', PersonaController::class);
 
 
+Route::get('/futurojubilados/seguimientoUsuarios/{m4user}', [FuturoJubiladoController::class, 'seguimientoUsuarios'])
+    ->name('futurojubilados.seguimientoUsuarios');
+
+ 
+
+    Route::post('personas/guardar-seguimiento', [PersonaController::class, 'guardarSeguimiento'])
+        ->name('personas.guardarSeguimiento');
+    

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 // EXCEL
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\FuturosJubiladosExport;
-
+use App\Models\Persona;
 
 class FuturoJubiladoController extends Controller
 {
@@ -107,8 +107,8 @@ class FuturoJubiladoController extends Controller
             $query->whereNull('comments');
         }
 
-        // $futurosjubilados = $query->orderBy('fecha_actualiza','desc')->get();
-        $futurosjubilados = $query->get();
+
+        $futurosjubilados = $query->orderBy('fecha_actualiza','desc')->get();
         
 
         $totalJubilados = $futurosjubilados->count();
@@ -280,6 +280,26 @@ class FuturoJubiladoController extends Controller
             return response()->json(['message' => 'Error al consumir la API.'], 500);
         }
     }
+
+
+    public function seguimientoUsuarios($m4user)
+    {
+        // Buscar al usuario en la tabla personas
+        $persona = Persona::where('m4user', $m4user)->firstOrFail();
+
+        // Obtener la fecha de hoy en formato dd/mm/yyyy
+        $fechaHoy = Carbon::now()->format('d/m/Y');
+
+        // Agregar la fecha a las observaciones
+        $observacionesConFecha = $persona->observaciones . "\nFecha: " . $fechaHoy;
+
+        // Devolver la vista con los datos del usuario
+        return view('FuturoJubilado.seguimiento', [
+            'usuario' => $m4user,
+            'observaciones' => $observacionesConFecha
+        ]);
+    }
+
 
     public function create()
     {

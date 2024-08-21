@@ -121,6 +121,28 @@ class PersonaController extends Controller
         return redirect()->route('personas.index')->with('success', 'Persona actualizada exitosamente.');
     }
 
+ 
+        public function guardarSeguimiento(Request $request, Persona $persona)
+        {
+            // Validar la solicitud
+            $request->validate([
+                'm4user' => 'required|exists:personas,m4user',
+                'observaciones' => 'required'
+            ]);
+    
+            // Buscar la persona por su m4user
+            $persona = Persona::where('m4user', $request->m4user)->firstOrFail();
+    
+            // Actualizar el campo observaciones
+            $persona->update([
+                'observaciones' => $request->observaciones,
+            ]);
+    
+            // Redirigir con un mensaje de éxito
+            return redirect()->route('personas.index')->with('success', 'Seguimiento actualizado exitosamente.');
+        }
+  
+
     /**
      * Remove the specified resource from storage.
      *
