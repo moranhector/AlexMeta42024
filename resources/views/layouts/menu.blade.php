@@ -13,12 +13,12 @@
     </a>
 </li>
 
-<li class="nav-item">
+<!-- <li class="nav-item">
     <a href="{{ route('planta') }}" class="nav-link {{ Request::is('planta') ? 'active' : '' }}">
         <i class="fa fa-users nav-icon"></i>
         <p>Planta de Personal</p>
     </a>
-</li>
+</li> -->
 
 <li class="nav-item">
     <a href="{{ route('jubilaciones') }}" class="nav-link {{ Request::is('jubilaciones') ? 'active' : '' }}">

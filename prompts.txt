@@ -1,74 +1,91 @@
 Contexto:
-Tengo un programa PHP Laravel ALEXM4 y tengo una Api Node.js conectada a Oracle BATTY.JS
+Tengo un programa PHP Laravel 
 
-Necesito crear una página blade en ALEXM4 que muestre las ALTAS AGRUPADAS POR UOR
+En una vista futurojubilados.index tengo 2 formularios FORMS 
 
+En el primero se selecciona un usuario de esta manera
 
+        <div class="row align-items-end">
+            <div class="col-md-4 form-group">
+                <label for="usuario">Selecciona un Usuario:</label>
+                <select id="usuario" name="usuario" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todos los usuarios</option>
+                    @foreach ($usuarios as $usuario)
+                    <option value="{{ $usuario->usuario }}" {{ request('usuario') == $usuario->usuario ? 'selected' : '' }}>
+                        {{ $usuario->usuario }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
 
-http://localhost:3000/altas_agrupadas_por_uor/202301
+        </div>
 
-Ordenes:
+En el Segundo form necesito registrar un dato en base al usuario seleccionado: 
 
-1) Escribir una función para un CONTROLLER que ya existe
-app\Http\Controllers\M4dashboardController.php
-
-Esta función se llamará 
-ShowAltasAgrupadas()
-
-Recibirá como argumento ( periodo ) : una cadena de 6 caracteres
-
-Si no recibe ningun argumento "periodo" asumirá por defecto el valor '202308'
-PERIODO ES la representación de un mes y año con el formato
-AAAAMMM
-
-
-ShowAltasAgrupadas() se conectará con el endpoint BATTY de ruta: 
-
-http://localhost:3000/altas_agrupadas_por_uor/202307
-Siendo 202307 un parámetro posible para PERIODO
-
-Los datos recibidos son por ejemplo:
-
-"rows": [
-{
-"UOR": "Dcción. de Educación Especial",
-"CANTIDAD": 1
-},
-{
-"UOR": "Instituto Provincial de la Vivienda",
-"CANTIDAD": 1
-},
-{
-"UOR": "Dcción. Gral. Obra Social de Emp. Pcos.",
-"CANTIDAD": 1
-},
-{
-"UOR": "Dcción.de Agricultura y Contingencias Clim",
-"CANTIDAD": 1
-},
-
-ShowAltasAgrupadas() deberá devolver los datos conseguidos en el endpoint
-y una vista blade.
-
-2) Escribe la vista blade de nombre:
-
-planta/showAltasAgrupadas.blade.php
-
-la vista muestra en formato de Tabla HTML con Bootstrap los datos recibidos.
-en columnas UOR y CANTIDAD
-
-3)
-
-Escribe la ruta Laravel para acceder al Controller y la función escritas.
+   <!-- Segundo formulario -->
+    <form id="segundo-formulario" method="GET" 
+        action="{{ route('personas.update', $persona->id) }}">
+         @csrf
+         <button type="submit" class="btn btn-success">Enviar Seguimiento</button>
+    </form>
 
 
+La Ruta para enviar esta petición es  en el la variable usuario en:
+
+Route::get('/futurojubilados/seguimientoUsuarios/{usuario}', [FuturoJubiladoController::class, 'seguimientoUsuarios'])
+    ->name('futurojubilados.seguimientoUsuarios');
+
+El método que recibe esta ruta es: 
+
+    public function seguimientoUsuarios($usuario)
+    {
+        // Buscar al usuario en la tabla personas
+        $persona = Persona::where('m4user', $usuario)->firstOrFail();
+
+        // Obtener la fecha de hoy en formato dd/mm/yyyy
+        $fechaHoy = Carbon::now()->format('d/m/Y');
+
+        // Agregar la fecha a las observaciones
+        $observacionesConFecha = $persona->observaciones . "\nFecha: " . $fechaHoy."\n";
+
+        // Devolver la vista con los datos del usuario
+        return view('FuturoJubilado.seguimiento', [
+            'usuario' => $m4user,
+            'observaciones' => $observacionesConFecha
+        ]);
+    }
+
+El Formulario de la vista FuturoJubilado.seguimiento es:
+
+    <form action="{{ route('personas.guardarSeguimiento') }}" method="POST">
+        @csrf
+        <input type="hidden" name="m4user" value="{{ $usuario }}">
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Observaciones:</strong>
+                <textarea class="form-control" style="height:400px" name="observaciones" placeholder="Observaciones" id="observaciones" cols="30" rows="10">{{ $observaciones }}</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Guardar Seguimiento</button>
+
+            //AGREGAR UN BOTÓN DE SALIR SIN GRABAR
+
+        </div>
+    </form>
+
+La ruta para recibir esos datos de Observaciones es:
+
+    Route::post('personas/guardar-seguimiento', [PersonaController::class, 'guardarSeguimiento'])
+        ->name('personas.guardarSeguimiento');
 
 
+TAREA: Por favor hacé las correcciones necesarias a este código para que funcione correctamente.
+Al hacer clic en GUARDAR SEGUIMIENTO que grabe y regrese a la vista futurojubilados.index sin recargar
 
-
-
-
-
+en la posición de //AGREGAR UN BOTÓN DE SALIR SIN GRABAR escribir el botón CANCELAR.
 
 
 

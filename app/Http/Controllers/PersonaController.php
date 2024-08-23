@@ -122,25 +122,19 @@ class PersonaController extends Controller
     }
 
  
-        public function guardarSeguimiento(Request $request, Persona $persona)
-        {
-            // Validar la solicitud
-            $request->validate([
-                'm4user' => 'required|exists:personas,m4user',
-                'observaciones' => 'required'
-            ]);
+    public function guardarSeguimiento(Request $request)
+    {
+        $persona = Persona::where('m4user', $request->m4user)->firstOrFail();
+        $persona->observaciones = $request->observaciones;
+        $persona->save();
     
-            // Buscar la persona por su m4user
-            $persona = Persona::where('m4user', $request->m4user)->firstOrFail();
+        //return response()->json(['success' => true]);
+        // return redirect()->route('futurosjubilados.index'); 
+        return back()->withInput();               
+    }
     
-            // Actualizar el campo observaciones
-            $persona->update([
-                'observaciones' => $request->observaciones,
-            ]);
     
-            // Redirigir con un mensaje de éxito
-            return redirect()->route('personas.index')->with('success', 'Seguimiento actualizado exitosamente.');
-        }
+    
   
 
     /**

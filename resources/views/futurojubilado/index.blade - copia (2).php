@@ -1,7 +1,4 @@
 @extends('layouts.app')
-<!-- Bootstrap CSS -->
-
-
 
 <style>
     /* En tu archivo de estilos CSS */
@@ -156,7 +153,9 @@
 
         </div>
 
-        <!-- primer formulario -->
+        <!-- TERCERA FILA -->
+
+
         <div class="row align-items-end">
             <div class="col-md-4 form-group">
                 <label for="usuario">Selecciona un Usuario:</label>
@@ -207,36 +206,26 @@
 
     </form>
 
+    <form id="seguimientoForm" method="GET" action="{{ route('futurojubilados.seguimientoUsuarios') }}">
+        @csrf
+        <!-- Campo oculto para el parámetro m4user -->
+        <input type="hidden" name="m4user" value="{{ request()->get('usuario') }}">
+        <!-- Campo oculto para la URL de retorno -->
+        <input type="hidden" name="redirect_to" value="{{ url()->full() }}">
 
-
-    @if(request()->has('usuario'))
-
-
-
-    <!-- Botón para abrir el modal -->
-    <button type="button" class="btn btn-info" onclick="openSeguimientoModal()">
-        Abrir Seguimiento
-    </button>
-
-
-
-    @endif
-
-
-
-
-
-
-
-
-
-
-    <div id="mensaje-error" style="color: red;"></div>
-
-
-
-    <!-- Espacio para mostrar el mensaje de error si no hay usuario en la URL -->
-    <div id="mensaje-error" style="color: red;"></div>
+        <!-- Botón de Seguimiento controlado por JavaScript -->
+        <div class="col-md-2 form-group d-flex justify-content-end">
+            @if(request()->has('usuario') && request('usuario') !== '')
+            <button type="button" class="btn btn-success align-self-end" onclick="submitSeguimientoForm()">
+                Seguimiento
+            </button>
+            @else
+            <button type="button" class="btn btn-success align-self-end" disabled>
+                Seguimiento
+            </button>
+            @endif
+        </div>
+    </form>
 
 
 
@@ -307,44 +296,6 @@
 
 
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="seguimientoModal" tabindex="-1" role="dialog" aria-labelledby="seguimientoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="seguimientoModalLabel">Seguimiento de Usuario: <span id="modalUsuario"></span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="seguimiento-form" action="{{ route('personas.guardarSeguimiento') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="m4user" id="modalM4User">
-
-                    <div class="form-group">
-                        <strong>Observaciones:</strong>
-                        <textarea class="form-control" style="height:400px" name="observaciones" placeholder="Observaciones" id="modalObservaciones" cols="30" rows="10"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Guardar Seguimiento</button>
-                    </div>
-                </form>
-            </div>
-        <!-- Botón de Cancelar dentro del Modal -->
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="btnCancelar">Cancelar</button>
-        </div>
-
-
-        </div>
-    </div>
-</div>
-
-
-
 
 <script>
     // FORMULARIO MODAL 
@@ -540,51 +491,21 @@
     });
 </script>
 
+<script>
+        function submitSeguimientoForm() {
+            var form = document.getElementById('seguimientoForm');
+            form.submit();
+        }
+    </script>
+
+
+
+
+
+
 
 </div>
 
-<script>
-    function openSeguimientoModal() {
-        // Obtener el parámetro 'usuario' de la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const m4user = urlParams.get('usuario'); // obtiene el valor de 'usuario'
-
-        if (m4user) {
-            // Realizar una solicitud AJAX al método seguimientoUsuarios
-            $.ajax({
-                url: '/futurojubilados/seguimientoUsuarios/' + m4user,
-                method: 'GET',
-                success: function(data) {
-                    // Poblar el modal con los datos recibidos
-                    document.getElementById('modalUsuario').innerText = data.usuario;
-                    document.getElementById('modalM4User').value = data.usuario;
-                    document.getElementById('modalObservaciones').value = data.observaciones;
-
-                    // Abrir el modal
-                    $('#seguimientoModal').modal('show');
-                },
-                error: function(xhr) {
-                    // Manejo de errores
-                    console.error('Error al obtener los datos:', xhr);
-                }
-            });
-        } else {
-            console.error('Usuario no encontrado en la URL');
-        }
-    }
-</script>
-
-<script>
-    document.getElementById('btnCancelar').addEventListener('click', function() {
-        // Obtén el modal abierto actualmente
-        var modal = document.querySelector('.modal.show');
-        
-        if (modal) {
-            // Simula la acción de presionar la tecla ESC
-            $(modal).modal('hide');
-        }
-    });
-</script>
 
 
 

@@ -286,19 +286,52 @@ class FuturoJubiladoController extends Controller
     {
         // Buscar al usuario en la tabla personas
         $persona = Persona::where('m4user', $m4user)->firstOrFail();
-
+    
         // Obtener la fecha de hoy en formato dd/mm/yyyy
         $fechaHoy = Carbon::now()->format('d/m/Y');
-
-        // Agregar la fecha a las observaciones
-        $observacionesConFecha = $persona->observaciones . "\nFecha: " . $fechaHoy;
-
-        // Devolver la vista con los datos del usuario
-        return view('FuturoJubilado.seguimiento', [
+    
+        // Verificar si la fecha de hoy ya está presente en las observaciones
+        if (strpos($persona->observaciones, "Fecha: " . $fechaHoy) === false) {
+            // Si no está presente, agregar la fecha a las observaciones
+            $persona->observaciones .= "\nFecha: " . $fechaHoy . "\n";
+    
+            // Guardar los cambios en la base de datos
+            $persona->save();
+        }
+    
+        // Retornar los datos en formato JSON
+        return response()->json([
             'usuario' => $m4user,
-            'observaciones' => $observacionesConFecha
+            'observaciones' => $persona->observaciones
         ]);
     }
+    
+
+
+    // public function seguimientoUsuarios($m4user)
+    // {
+    //     // Buscar al usuario en la tabla personas
+    //     $persona = Persona::where('m4user', $m4user)->firstOrFail();
+    
+    //     // Obtener la fecha de hoy en formato dd/mm/yyyy
+    //     $fechaHoy = Carbon::now()->format('d/m/Y');
+    
+    //     // Verificar si la fecha de hoy ya está presente en las observaciones
+    //     if (strpos($persona->observaciones, "Fecha: " . $fechaHoy) === false) {
+    //         // Si no está presente, agregar la fecha a las observaciones
+    //         $persona->observaciones .= "\nFecha: " . $fechaHoy . "\n";
+    
+    //         // Guardar los cambios en la base de datos
+    //         $persona->save();
+    //     }
+    
+    //     // Devolver la vista con los datos del usuario
+    //     return view('FuturoJubilado.seguimiento', [
+    //         'usuario' => $m4user,
+    //         'observaciones' => $persona->observaciones
+    //     ]);
+    // }
+    
 
 
     public function create()
