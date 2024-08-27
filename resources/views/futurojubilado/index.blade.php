@@ -314,7 +314,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="seguimientoModalLabel">Seguimiento de Usuario: <span id="modalUsuario"></span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                <button type="button" class="close" data-dismiss="modal" style="display:none;" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -330,13 +330,17 @@
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Guardar Seguimiento</button>
+                        <button type="button" class="btn btn-secondary" id="btnCancelar">Cancelar</button>                        
                     </div>
+
+                    
+                    
+                    
+
                 </form>
             </div>
-        <!-- Botón de Cancelar dentro del Modal -->
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="btnCancelar">Cancelar</button>
-        </div>
+            <!-- Botón de Cancelar dentro del Modal -->
+
 
 
         </div>
@@ -565,11 +569,11 @@
                 },
                 error: function(xhr) {
                     // Manejo de errores
-                    console.error('Error al obtener los datos:', xhr);
+                    alert('Por favor registre al usuario en una Institución / Oficina');
                 }
             });
         } else {
-            console.error('Usuario no encontrado en la URL');
+            alert('Seleccione un usuario por favor');
         }
     }
 </script>
@@ -578,7 +582,7 @@
     document.getElementById('btnCancelar').addEventListener('click', function() {
         // Obtén el modal abierto actualmente
         var modal = document.querySelector('.modal.show');
-        
+
         if (modal) {
             // Simula la acción de presionar la tecla ESC
             $(modal).modal('hide');

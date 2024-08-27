@@ -296,7 +296,8 @@ class FuturoJubiladoController extends Controller
             $persona->observaciones .= "\nFecha: " . $fechaHoy . "\n";
     
             // Guardar los cambios en la base de datos
-            $persona->save();
+            // $persona->save();
+            // NO GUARDAR
         }
     
         // Retornar los datos en formato JSON
