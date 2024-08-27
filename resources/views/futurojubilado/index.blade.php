@@ -556,7 +556,7 @@
         if (m4user) {
             // Realizar una solicitud AJAX al método seguimientoUsuarios
             $.ajax({
-                url: '/futurojubilados/seguimientoUsuarios/' + m4user,
+                url: SERVER_NODE +'/futurojubilados/seguimientoUsuarios/' + m4user,
                 method: 'GET',
                 success: function(data) {
                     // Poblar el modal con los datos recibidos

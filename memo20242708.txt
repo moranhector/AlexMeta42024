@@ -1,0 +1,2 @@
+app/Http/Controllers/FuturoJubiladoController.php
+resources/views/futurojubilado/index.blade.php
