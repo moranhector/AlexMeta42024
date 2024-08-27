@@ -1,2 +1,4 @@
-app/Http/Controllers/FuturoJubiladoController.php
+finalizojornada.bat
+memo20242708.php
+memo20242708.txt
 resources/views/futurojubilado/index.blade.php
