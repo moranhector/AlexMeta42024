@@ -43,7 +43,12 @@
 
                     {{ $futuro->id_secuser }}: {{ substr( $futuro->last_observacion , 0, 40) }}
                 </td>
-                <td class="comments-column" id="comments-{{ $futuro->id }}">{{ $futuro->comments }}</td>
+                <td 
+                    data-toggle="tooltip" 
+                    title="{{ $futuro->comments }}"                 
+                    class="comments-column" 
+                    id="comments-{{ $futuro->id }}">{{ substr( $futuro->comments , 0, 100)  }}
+                </td>
 
                 <!-- <td>
                     <a href="{ { route('futurojubilado.show', $futuro->cuil) } }" class="btn btn-info">Ver</a>

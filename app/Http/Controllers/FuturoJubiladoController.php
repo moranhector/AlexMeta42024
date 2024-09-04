@@ -346,7 +346,7 @@ class FuturoJubiladoController extends Controller
  
         $request->validate([
             'id' => 'required|exists:futurosjubilados,id',
-            'comments' => 'max:190'
+            'comments' => 'max:2000'
         ]);
 
         $futuro = FuturoJubilado::find($request->id);
