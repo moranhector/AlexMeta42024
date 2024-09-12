@@ -13,6 +13,7 @@ class Persona extends Model
         'm4user',
         'nombre',
         'etiqueta',
+        'oficina',
         'email',
         'celular',
         'observaciones',

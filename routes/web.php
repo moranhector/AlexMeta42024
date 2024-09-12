@@ -85,6 +85,6 @@ Route::get('/futurojubilados/seguimientoUsuarios/{usuario?}', [FuturoJubiladoCon
 
  
 
-    Route::post('personas/guardar-seguimiento', [PersonaController::class, 'guardarSeguimiento'])
+Route::post('personas/guardar-seguimiento', [PersonaController::class, 'guardarSeguimiento'])
         ->name('personas.guardarSeguimiento');
     

@@ -15,7 +15,7 @@
 
     @if ($errors->any())
         <div class="alert alert-danger">
-            <strong>Whoops!</strong> Hubo algunos problemas con tu entrada.<br><br>
+            <strong>Atención!</strong> Hubo algunos problemas con tu entrada.<br><br>
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -43,10 +43,18 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Etiqueta:</strong>
+                    <strong>Jurisdicción:</strong>
                     <input type="text" name="etiqueta" value="{{ $persona->etiqueta }}" class="form-control" placeholder="Etiqueta">
                 </div>
             </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Oficina:</strong>
+                    <input type="text" name="oficina" class="form-control" placeholder="Escriba la descripción de la oficina">
+                </div>
+            </div>            
+
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Email:</strong>

@@ -1,3 +1,0 @@
-memo20242708.txt
-resources/views/futurojubilado/index.blade.php
-storage/framework/cache/data/.gitignore

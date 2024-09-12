@@ -18,6 +18,7 @@ class CreatePersonasTable extends Migration
             $table->string('m4user')->unique();
             $table->string('nombre');
             $table->string('etiqueta');
+            $table->string('persona');
             $table->string('email')->unique();
             $table->string('celular');
             $table->text('observaciones')->nullable();

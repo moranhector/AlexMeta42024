@@ -54,10 +54,10 @@ class FuturoJubiladoController extends Controller
             $titulo = $titulo.$etiqueta;
         }
 
-        if ($usuario) {
-            $query->where('id_secuser', $usuario);
-            $titulo = $titulo.' Usuario '.$usuario;
-        }
+        // if ($usuario) {
+        //     $query->where('id_secuser', $usuario);
+        //     $titulo = $titulo.' Usuario '.$usuario;
+        // }
 
 
 
@@ -115,10 +115,37 @@ class FuturoJubiladoController extends Controller
 
         $etiquetas = FuturoJubilado::select('etiqueta')->distinct()->orderBy('etiqueta')->get();
 
-        $usuarios  = FuturoJubilado::select('id_secuser as usuario')
-            ->where('id_secuser', '!=', '')
-            ->distinct()
-            ->orderBy('id_secuser')->get();
+        // $usuarios  = FuturoJubilado::select('id_secuser as usuario')
+        //     ->where('id_secuser', '!=', '')
+        //     ->distinct()
+        //     ->orderBy('id_secuser')->get();
+
+
+        //$usuarios  = Persona::select('CONCAT( m4user ," [ ",  etiqueta,  " ] " ) AS usuario')
+          //              ->orderBy('m4user')->get();            
+
+        //   $usuarios = Persona::select(DB::raw('CONCAT(m4user, " [ ", etiqueta, " ]") AS usuario'))
+        //   ->orderBy('usuario')->get();     
+
+
+        if ($etiqueta) {
+            // Si hay una etiqueta seleccionada, filtra por esa etiqueta
+            $usuarios = Persona::select(DB::raw('CONCAT(m4user, " [ ", oficina, " ]") AS usuario'))
+                ->where('etiqueta', $etiqueta)
+                ->orderBy('m4user')
+                ->get();
+                //dd( $usuarios->toArray() ) ;                     
+        } else {
+            // Si no hay etiqueta, simplemente selecciona los usuarios sin filtro
+          $usuarios = Persona::select(DB::raw('CONCAT(m4user, " [ ", oficina, " ]") AS usuario'))
+          ->where('etiqueta', 'NONE')          
+          ->get();     
+        }
+        
+ 
+
+        
+          
         
 
         $generos   = FuturoJubilado::select('genero')->distinct()->orderBy('genero')->get();
@@ -284,8 +311,15 @@ class FuturoJubiladoController extends Controller
 
     public function seguimientoUsuarios($m4user)
     {
-        // Buscar al usuario en la tabla personas
-        $persona = Persona::where('m4user', $m4user)->firstOrFail();
+
+        // Limpiar el parámetro eliminando lo que esté después de "["
+        $limpioM4User = explode('[', $m4user)[0];
+        
+        // Eliminar espacios en blanco sobrantes al inicio o final
+        $limpioM4User = trim($limpioM4User);        
+
+    // Buscar al usuario en la tabla personas
+    $persona = Persona::where('m4user', $limpioM4User)->firstOrFail();
     
         // Obtener la fecha de hoy en formato dd/mm/yyyy
         $fechaHoy = Carbon::now()->format('d/m/Y');
