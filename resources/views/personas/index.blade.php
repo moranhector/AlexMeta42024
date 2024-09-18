@@ -47,6 +47,7 @@
         <tr>
             <!-- <th>No</th> -->
             <th>Usuario M4</th>
+            <th>P</th>
             <th>Nombre</th>
             <th>Institución</th>
             <th>Email</th>
@@ -60,6 +61,11 @@
         <tr>
 
             <td>{{ $persona->m4user }}</td>
+         
+            <td>
+                {!! $persona->es_principal ? '<span>&#10004;</span>' : ' ' !!}
+            </td>
+          
             <td>{{ $persona->nombre }}</td>
             <td>{{ $persona->etiqueta }}</td>
             <td>{{ $persona->email }}</td>

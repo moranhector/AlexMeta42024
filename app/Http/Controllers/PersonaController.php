@@ -109,6 +109,10 @@ class PersonaController extends Controller
      */
     public function update(Request $request, Persona $persona)
     {
+
+        // dd($request->request);
+        $es_principal = $request->has('es_principal') ? 1 : 0;
+ 
         $request->validate([
             'm4user' => 'required|unique:personas,m4user,' . $persona->id,
             'nombre' => 'required',
@@ -116,7 +120,12 @@ class PersonaController extends Controller
              ]);
 
 
-        $persona->update($request->all());
+        // Crear un array con todos los datos del request y sobrescribir 'es_principal'
+        $data = $request->all();
+        $data['es_principal'] = $es_principal;
+
+        // Actualizar la persona con los datos modificados
+        $persona->update($data);
 
         return redirect()->route('personas.index')->with('success', 'Persona actualizada exitosamente.');
     }
@@ -124,7 +133,18 @@ class PersonaController extends Controller
  
     public function guardarSeguimiento(Request $request)
     {
-        $persona = Persona::where('m4user', $request->m4user)->firstOrFail();
+
+        // Limpiar el parámetro eliminando lo que esté después de "["
+        $limpioM4User = explode('[', $request->m4user )[0];
+        
+        // Eliminar espacios en blanco sobrantes al inicio o final
+        $limpioM4User = trim($limpioM4User);        
+
+        // Buscar al usuario en la tabla personas
+        // $persona = Persona::where('m4user', $limpioM4User)->firstOrFail();
+
+
+        $persona = Persona::where('m4user', $limpioM4User )->firstOrFail();
         $persona->observaciones = $request->observaciones;
         $persona->save();
     

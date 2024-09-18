@@ -17,5 +17,6 @@ class Persona extends Model
         'email',
         'celular',
         'observaciones',
+        'es_principal',
     ];
 }

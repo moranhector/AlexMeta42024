@@ -132,6 +132,7 @@ class FuturoJubiladoController extends Controller
             // Si hay una etiqueta seleccionada, filtra por esa etiqueta
             $usuarios = Persona::select(DB::raw('CONCAT(m4user, " [ ", oficina, " ]") AS usuario'))
                 ->where('etiqueta', $etiqueta)
+                ->where('es_principal', 1 )
                 ->orderBy('m4user')
                 ->get();
                 //dd( $usuarios->toArray() ) ;                     

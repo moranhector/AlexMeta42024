@@ -72,16 +72,17 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Jurisdicción:</strong>
-                    <input list="etiquetas" name="etiqueta" class="form-control" placeholder="Etiqueta" value="{{ old('etiqueta') }}">
-                    <datalist id="etiquetas">
+                    <select name="etiqueta" class="form-control">
+                        <option value="">Seleccione una opción</option> <!-- Opción por defecto -->
                         @foreach ($etiquetas as $etiqueta)
-                        <option value="{{ $etiqueta->etiqueta }}">
+                        <option value="{{ $etiqueta->etiqueta }}" {{ old('etiqueta') == $etiqueta->etiqueta ? 'selected' : '' }}>
                             {{ $etiqueta->etiqueta }}
                         </option>
                         @endforeach
-                    </datalist>
+                    </select>
                 </div>
             </div>
+
             <!-- FIN INSERTAR ETIQUETAS JURISDICCION -->
 
             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -90,6 +91,19 @@
                     <input type="text" name="oficina" class="form-control" placeholder="Escriba la descripción de la oficina">
                 </div>
             </div>
+
+            <!-- FIN INSERTAR ETIQUETAS JURISDICCION -->
+
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <strong>Principal:</strong>
+                    <input type="checkbox" name="es_principal" value="0">
+                    <!-- <label for="es_principal">Es responable principal de la oficina</label>                     -->
+                </div>
+            </div>
+
+            
+
 
 
             <div class="col-xs-12 col-sm-12 col-md-12">
