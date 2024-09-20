@@ -192,7 +192,7 @@
         <div class="row align-items-end">
             <div class="col-md-4 form-group">
                 <label for="usuario">Usuario de Seguimiento:</label>
-                <select id="usuario" name="usuario" class="form-control"  onchange="this.form.submit()">
+                <select id="usuario" name="usuario" class="form-control" onchange="this.form.submit()">
                     <option value="">Todos los usuarios</option>
                     @foreach ($usuarios as $usuario)
                     <option value="{{ $usuario->usuario }}" {{ request('usuario') == $usuario->usuario ? 'selected' : '' }}>
@@ -334,12 +334,12 @@
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Guardar Seguimiento</button>
-                        <button type="button" class="btn btn-secondary" id="btnCancelar">Cancelar</button>                        
+                        <button type="button" class="btn btn-secondary" id="btnCancelar">Cancelar</button>
                     </div>
 
-                    
-                    
-                    
+
+
+
 
                 </form>
             </div>
@@ -436,15 +436,19 @@
 
         function formatDate(dateString) {
             console.log(dateString);
-            if (dateString == '4000-01-01T00:00:00.000Z') {
+            if (dateString === '4000-01-01T00:00:00.000Z') {
                 return '  /  /  ';
             }
-            var date = new Date(dateString);
-            var day = ('0' + date.getDate()).slice(-2);
-            var month = ('0' + (date.getMonth() + 1)).slice(-2);
-            var year = date.getFullYear();
+            // Extraer solo la parte de la fecha (YYYY-MM-DD)
+            var datePart = dateString.slice(0, 10); // Tomamos solo "YYYY-MM-DD"
+            var date = new Date(datePart); // Crear la fecha solo con la parte de la fecha
+            var day = ('0' + date.getUTCDate()).slice(-2); // Usar getUTCDate para evitar conversiones
+            var month = ('0' + (date.getUTCMonth() + 1)).slice(-2); // Usar getUTCMonth
+            var year = date.getUTCFullYear(); // Usar getUTCFullYear
+
             return day + '/' + month + '/' + year;
         }
+
 
 
     });
@@ -561,7 +565,7 @@
             // Realizar una solicitud AJAX al método seguimientoUsuarios
             $.ajax({
                 //url: '/futurojubilados/seguimientoUsuarios/' + m4user,
-                url: '{{ url("futurojubilados/seguimientoUsuarios") }}/' + m4user,                
+                url: '{{ url("futurojubilados/seguimientoUsuarios") }}/' + m4user,
                 method: 'GET',
                 success: function(data) {
                     // Poblar el modal con los datos recibidos
