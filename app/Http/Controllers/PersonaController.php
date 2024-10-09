@@ -25,6 +25,7 @@ class PersonaController extends Controller
             $personas = Persona::where('m4user', 'LIKE', "%{$search}%")
                 ->orWhere('nombre', 'LIKE', "%{$search}%")
                 ->orWhere('etiqueta', 'LIKE', "%{$search}%")
+                ->orWhere('oficina', 'LIKE', "%{$search}%")
                 ->orderBy('etiqueta')
                 ->get();
         } else {
@@ -33,7 +34,8 @@ class PersonaController extends Controller
         }
 
         if ($request->has('export_excel')) {
-            return Excel::download(new PersonasExport(), 'personas.xlsx');
+            //Paso el reques con los filtros al Export de Excel
+            return Excel::download(new PersonasExport($search), 'personas.xlsx');
         }        
 
         return view('personas.index', compact('personas'))->with('i', 0);

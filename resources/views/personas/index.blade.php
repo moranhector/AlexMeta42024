@@ -24,7 +24,7 @@
         <div class="col-md-12">
             <form action="{{ route('personas.index') }}" method="GET">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Buscar por M4User, Nombre o Etiqueta" value="{{ request()->query('search') }}">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar por Nombre de Usuario o Jurisdicción" value="{{ request()->query('search') }}">
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-primary">Buscar</button>
                     </span>
@@ -50,7 +50,7 @@
             <th>P</th>
             <th>Nombre</th>
             <th>Institución</th>
-            <th>Email</th>
+            <th>Oficina</th>
             <!-- <th>Celular</th> -->
             <th>Observaciones</th>
             <th width="170px">Acciones</th>
@@ -68,7 +68,8 @@
           
             <td>{{ $persona->nombre }}</td>
             <td>{{ $persona->etiqueta }}</td>
-            <td>{{ $persona->email }}</td>
+            <!-- <td>{ { $persona->email } }</td> -->
+            <td>{{ $persona->oficina }}</td>
             <!-- <td>{{ $persona->celular }}</td> -->
             <td>{{ $persona->observaciones }}</td>
 

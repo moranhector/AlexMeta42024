@@ -248,12 +248,7 @@
 
 
     <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
-    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
-    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
-
-
-
-
+ 
     <div class="card-body">
         <div class="row no-gutters align-items-center">
             <div class="panel-heading">
@@ -273,12 +268,38 @@
         </div>
     </div>
     <input type="text" class="daterangepicker-field">
-    <button id="export-button">Descargar Informe</button>
+    <button id="export-button-alcanzan-edad">Descargar Informe</button>
+    <!-- Javascript en layouts.app
+    project://resources\views\layouts\app.blade.php#268 
+    -->
+
+    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
 
 
-    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
-    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
-    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
+    <!-- Bajas o Jubilaciones entre fechas -->
+ 
+    <div class="card-body">
+        <div class="row no-gutters align-items-center">
+            <div class="panel-heading">
+                <h5>Informe de bajas de Personas ( C/Trámite de Jubilación )</h5>
+
+            </div>
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                </div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800"> </div>
+
+            </div>
+
+        </div>
+    </div>
+    <input type="text" class="daterangepicker-field">
+    <button id="export-button-bajas">Descargar Informe</button>
+    <!-- Javascript en layouts.app
+    project://resources\views\layouts\app.blade.php#268 
+    -->
+
+    <!-- FIN  Bajas o Jubilaciones entre fechas -->
 
 
 
@@ -602,3 +623,27 @@
 
 
 @endsection
+
+@once
+        @push('scripts')
+    
+        <script>
+        // Evento al hacer clic en el botón de exportar
+        $('#export-button-alcanzan-edad').on('click', function() {
+            var dateRange = $('.daterangepicker-field').data('daterangepicker');
+
+            var startDate = dateRange.startDate.format('DD-MM-YYYY');
+            console.log(startDate);
+            var endDate = dateRange.endDate.format('DD-MM-YYYY');
+
+
+            var apiUrl = SERVER_NODE + '/alcanzan_edad_fechas/' + startDate + '/' + endDate;
+
+            var fileName = 'Personas_que_alcanzan_edad_jubilatoria' + startDate + '_' + endDate + '.xlsx';
+            console.log(apiUrl);
+            exportToExcel(apiUrl, fileName);
+        });
+        </script>
+        
+        @endpush
+@endonce

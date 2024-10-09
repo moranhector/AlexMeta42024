@@ -265,7 +265,7 @@
 
     <script>
     // Evento al hacer clic en el botón de exportar
-    $('#export-button').on('click', function() {
+    $('#export-button-alcanzan-edad').on('click', function() {
         var dateRange = $('.daterangepicker-field').data('daterangepicker');
 
         var startDate = dateRange.startDate.format('DD-MM-YYYY');

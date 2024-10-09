@@ -21,15 +21,11 @@ Route::get('/', function () {
     return view('welcome2');
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
-
 require __DIR__.'/auth.php';
 
 Route::get('/jubilaciones','App\Http\Controllers\M4dashboardController@jubilaciones') ->name('jubilaciones');
 
-Route::get('/dashboard/{usuario_name?}','App\Http\Controllers\M4dashboardController@dashboard') ->name('dashboard');
+//Route::get('/dashboard/{usuario_name?}','App\Http\Controllers\M4dashboardController@dashboard') ->name('dashboard');
 
 Route::get('/planta','App\Http\Controllers\M4dashboardController@planta') ->name('planta');
 
@@ -74,9 +70,6 @@ Route::get('/futurosjubilados', [FuturoJubiladoController::class, 'index'])->nam
 Route::post('/futurosjubilados/store', [FuturoJubiladoController::class, 'store'])->name('futurosjubilados.store');
 Route::post('/futurosjubilados/show', [FuturoJubiladoController::class, 'show'])->name('futurosjubilados.show');
 
-
-
-
 Route::resource('personas', PersonaController::class);
 
 
@@ -88,3 +81,8 @@ Route::get('/futurojubilados/seguimientoUsuarios/{usuario?}', [FuturoJubiladoCon
 Route::post('personas/guardar-seguimiento', [PersonaController::class, 'guardarSeguimiento'])
         ->name('personas.guardarSeguimiento');
     
+use App\Http\Controllers\MailController;
+
+Route::get('/enviar-correo-oficial', [MailController::class, 'sendOfficialEmail']);
+        
+        

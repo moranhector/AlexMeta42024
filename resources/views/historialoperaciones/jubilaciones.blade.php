@@ -204,29 +204,21 @@
     </div>
 
     <!-- INFORME DE JUBILACIONES ENTRE FECHAS -->
-
-
     <!-- INFORME PERSONAS QUE CUMPLEN EDAD JUBILATORIA ENTRE FECHAS -->
-
-
 
     <div class="col-xl-6 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2" id="jubilados-fecha">
-
 
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="panel-heading">
                         <h5>Personas que cumplen edad jubilatoria en rango de fechas</h5>
 
-
                     </div>
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800"> </div>
-
-
 
                     </div>
 
@@ -236,10 +228,6 @@
             <button id="export-button">Descargar Informe</button>
         </div>
     </div>
-
-
-
-
 
 
 
@@ -1666,23 +1654,6 @@
     }
 </script>
 
-<script>
-    // Evento al hacer clic en el botón de exportar
-    $('#export-button').on('click', function() {
-        var dateRange = $('.daterangepicker-field').data('daterangepicker');
-
-        var startDate = dateRange.startDate.format('DD-MM-YYYY');
-        console.log(startDate);
-        var endDate = dateRange.endDate.format('DD-MM-YYYY');
-
-
-        var apiUrl = SERVER_NODE + '/alcanzan_edad_fechas/' + startDate + '/' + endDate;
-
-        var fileName = 'Personas_que_alcanzan_edad_jubilatoria' + startDate + '_' + endDate + '.xlsx';
-        console.log(apiUrl);
-        exportToExcel(apiUrl, fileName);
-    });
-</script>
 
 
 @endsection

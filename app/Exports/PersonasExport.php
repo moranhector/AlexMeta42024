@@ -15,15 +15,34 @@ use Carbon\Carbon;
 class PersonasExport implements FromCollection, WithHeadings, 
 WithEvents, WithCustomStartCell, WithTitle, ShouldAutoSize
 {
+
+    protected $search;
+
+    // Constructor para recibir el parámetro de búsqueda
+    public function __construct($search = null)
+    {
+        $this->search = $search;
+    }
+
     /**
      * Retorna la colección de datos para ser exportados.
      * 
      * @return \Illuminate\Support\Collection
      */
+    // Filtra la colección según el parámetro de búsqueda
     public function collection()
     {
-        // Retorna todos los registros de la tabla personas con todos los campos
-        return Persona::select('m4user', 'nombre', 'etiqueta', 'email', 'celular', 'observaciones')->get();
+        $query = Persona::select('m4user', 'nombre', 'etiqueta', 'oficina','email', 'celular', 'observaciones');
+
+        // Si hay un término de búsqueda, aplica el filtro
+        if ($this->search) {
+            $query->where('m4user', 'LIKE', "%{$this->search}%")
+                ->orWhere('nombre', 'LIKE', "%{$this->search}%")
+                ->orWhere('etiqueta', 'LIKE', "%{$this->search}%")
+                ->orWhere('oficina', 'LIKE', "%{$this->search}%");
+        }
+
+        return $query->get();
     }
 
     /**
@@ -37,6 +56,7 @@ WithEvents, WithCustomStartCell, WithTitle, ShouldAutoSize
             'M4User',
             'Nombre',
             'Etiqueta',
+            'Oficina',
             'Email',
             'Celular',
             'Observaciones'
@@ -63,13 +83,13 @@ WithEvents, WithCustomStartCell, WithTitle, ShouldAutoSize
                 $sheet->setCellValue('A1', 'Reporte de Usuarios - Instituciones ');
                 
                 // Combina las celdas para el título si lo deseas
-                $sheet->mergeCells('A1:F1');
+                $sheet->mergeCells('A1:G1');
                 // Aplica formato al título si lo deseas
                 $sheet->getStyle('A1')->getFont()->setBold(true);
                 $sheet->getStyle('A1')->getFont()->setSize(14);                
                 
                 // Aplica formato al título si lo deseas
-                $sheet->getStyle('A2:F2')->getFont()->setBold(true);
+                $sheet->getStyle('A2:G2')->getFont()->setBold(true);
                 // $sheet->getStyle('A2:F2')->getFont()->setSize(14);
                 // $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             }
