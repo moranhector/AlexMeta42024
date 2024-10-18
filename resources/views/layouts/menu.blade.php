@@ -60,3 +60,16 @@
         <p>Usuarios M4</p>
     </a>
 </li>
+
+ 
+
+<li class="nav-item">
+    @if(in_array(Auth::user()->email, $allowedUsers))
+        <a href="{{ route('bajas.index') }}" class="nav-link {{ Request::is('bajas') ? 'active' : '' }}">
+            <i class="fas fa-user-slash  nav-icon"></i>
+            <p>Informe Bajas</p>
+        </a>
+    @endif
+</li>
+
+ 

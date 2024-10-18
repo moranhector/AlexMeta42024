@@ -76,6 +76,9 @@ Route::resource('personas', PersonaController::class);
 Route::get('/futurojubilados/seguimientoUsuarios/{usuario?}', [FuturoJubiladoController::class, 'seguimientoUsuarios'])
     ->name('futurojubilados.seguimientoUsuarios');
 
+Route::get('/futurojubilados/bajas', [FuturoJubiladoController::class, 'bajas'])
+    ->name('bajas.index');
+
  
 
 Route::post('personas/guardar-seguimiento', [PersonaController::class, 'guardarSeguimiento'])

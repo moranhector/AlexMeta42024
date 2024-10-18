@@ -32,7 +32,7 @@ WithEvents, WithCustomStartCell, WithTitle, ShouldAutoSize
     // Filtra la colección según el parámetro de búsqueda
     public function collection()
     {
-        $query = Persona::select('m4user', 'nombre', 'etiqueta', 'oficina','email', 'celular', 'observaciones');
+        $query = Persona::select('m4user', 'nombre', 'etiqueta', 'oficina','email', 'celular', 'observaciones','es_principal');
 
         // Si hay un término de búsqueda, aplica el filtro
         if ($this->search) {
@@ -59,7 +59,8 @@ WithEvents, WithCustomStartCell, WithTitle, ShouldAutoSize
             'Oficina',
             'Email',
             'Celular',
-            'Observaciones'
+            'Observaciones',
+            'es_principal'
         ];
     }
 
@@ -83,13 +84,13 @@ WithEvents, WithCustomStartCell, WithTitle, ShouldAutoSize
                 $sheet->setCellValue('A1', 'Reporte de Usuarios - Instituciones ');
                 
                 // Combina las celdas para el título si lo deseas
-                $sheet->mergeCells('A1:G1');
+                $sheet->mergeCells('A1:H1');
                 // Aplica formato al título si lo deseas
                 $sheet->getStyle('A1')->getFont()->setBold(true);
                 $sheet->getStyle('A1')->getFont()->setSize(14);                
                 
                 // Aplica formato al título si lo deseas
-                $sheet->getStyle('A2:G2')->getFont()->setBold(true);
+                $sheet->getStyle('A2:H2')->getFont()->setBold(true);
                 // $sheet->getStyle('A2:F2')->getFont()->setSize(14);
                 // $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             }

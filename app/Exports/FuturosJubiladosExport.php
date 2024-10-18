@@ -46,6 +46,7 @@ WithEvents, WithCustomStartCell, WithTitle, ShouldAutoSize
                 'last_cod_jub_desc' => $jubilado->last_cod_jub_desc,
                 'fecha_actualiza' => Carbon::parse($jubilado->fecha_actualiza)->format('d/m/Y'),
                 'dias' => Carbon::parse($jubilado->fecha_actualiza)->diffInDays(),
+                'id_secuser' => $jubilado->id_secuser,
             ];
         });
     }
@@ -69,7 +70,8 @@ WithEvents, WithCustomStartCell, WithTitle, ShouldAutoSize
             'Cód.Trámite',
             'descrip',
             'Fecha Actualiza',
-            'dias'
+            'dias',
+            'usuario'
         ];
     }
 

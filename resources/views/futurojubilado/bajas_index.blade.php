@@ -60,16 +60,16 @@
     </div>
     @endif
 
-    <h1>Futuros Jubilados</h1>
+    <h1>Bajas</h1>
 
 
 
 
 
     <!-- Botón para actualizar los futuros jubilados desde la API -->
-    <a href="{{ url('/futurosjubilados/create_from_json') }}" class="btn btn-success mb-3">
+    <!-- <a href="{{ url('/futurosjubilados/create_from_json') }}" class="btn btn-success mb-3">
         Actualizar Futuros Jubilados
-    </a>
+    </a> -->
 
 
 
@@ -79,9 +79,7 @@
 
 
         <div class="row">
-
-
-            <div class="col-md-3 form-group">
+            <div class="col-md-4 form-group">
                 <label for="etiqueta">Selecciona una Jurisdicción:</label>
                 <select id="etiqueta" name="etiqueta" class="form-control" onchange="this.form.submit()">
                     <option value="">Todas</option>
@@ -93,39 +91,7 @@
                 </select>
             </div>
 
-
-
-
-
-            <!-- primer formulario -->
-
-            <div class="col-md-3 form-group">
-                <label for="oficina">Oficinas:</label>
-                <select id="oficina" name="oficina" class="form-control" onchange="this.form.submit()">
-                    <option value="">Todos las oficinas</option>
-                    @foreach ($oficinas as $oficina)
-                    <option value="{{ $oficina->oficina }}" {{ request('oficina') == $oficina->oficina ? 'selected' : '' }}>
-                        {{ $oficina->oficina }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-md-3 form-group">
-                <label for="unidad">Unidades Organizativas:</label>
-                <select id="unidad" name="unidad" class="form-control" onchange="this.form.submit()">
-                    <option value="">Todas</option>
-                    @foreach ($unidades as $unidad)
-                    <option value="{{ $unidad->unidad}}" {{ request('unidad') == $unidad->unidad ? 'selected' : '' }}>
-                        {{ $unidad->unidad }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-
-
-            <div class="col-md-3 form-group">
+            <div class="col-md-4 form-group">
                 <label for="estado">Selecciona un estado de trámite:</label>
                 <select id="estado" name="estado" class="form-control" onchange="this.form.submit()">
                     <option value="">Todos los estados</option>
@@ -138,6 +104,10 @@
                 </select>
             </div>
 
+            <div class="col-md-4 form-group">
+                <label for="search">Buscar persona:</label>
+                <input type="text" id="search" name="search" class="form-control" value="{{ request('search') }}" placeholder="Buscar por nombre o CUIL">
+            </div>
 
 
 
@@ -196,26 +166,13 @@
 
 
         <div class="row">
-
-            <div class="col-md-3 form-group">
-
-                <input type="text" id="search" name="search" class="form-control" value="{{ request('search') }}" placeholder="Buscar por nombre o CUIL">
-            </div>
-
-
-
-
             <div class="col-md-7">
                 <!-- Botón para buscar -->
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </div>
             <div class="col-md-3 text-right">
 
-
-                <!-- <label>
-                    <input type="checkbox" id="mostrarjubilados" name="mostrarjubilados" onchange="this.form.submit()" {{ $mostrarjubilados ? 'checked' : '' }}>
-                    Mostrar Jubilados
-                </label> -->
+ 
 
 
             </div>
@@ -227,21 +184,6 @@
         </div>
 
 
-        <!-- primer formulario -->
-        <div class="row align-items-end">
-            <div class="col-md-4 form-group">
-                <label for="usuario">Usuario de Seguimiento:</label>
-                <select id="usuario" name="usuario" class="form-control" onchange="this.form.submit()">
-                    <option value="">Todos los usuarios</option>
-                    @foreach ($usuarios as $usuario)
-                    <option value="{{ $usuario->usuario }}" {{ request('usuario') == $usuario->usuario ? 'selected' : '' }}>
-                        {{ $usuario->usuario }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-        </div>
 
 
 
@@ -281,57 +223,20 @@
     <!-- Espacio para mostrar el mensaje de error si no hay usuario en la URL -->
     <div id="mensaje-error" style="color: red;"></div>
 
-
-
-
-
-
-    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
-
-    <div class="card-body">
-        <div class="row no-gutters align-items-center">
-            <div class="panel-heading">
-                <h5>Personas que cumplen edad jubilatoria en rango de fechas</h5>
-
-
-            </div>
-            <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                </div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800"> </div>
-
-
-
-            </div>
-
-        </div>
-    </div>
-    <input type="text" class="daterangepicker-field">
-    <button id="export-button-alcanzan-edad">Descargar Informe</button>
-    <!-- Javascript en layouts.app
-    project://resources\views\layouts\app.blade.php#268 
-    -->
-
-    <!-- Personas que cumplen edad jubilatoria en rango de fechas -->
-
-
-
-
-
-
+ 
 
 
 
 
     <div class="card">
-        <p>Total de futuros jubilados: <span class="number">{{ $totalJubilados }}</span></p>
+        <p>Total de registros: <span class="number">{{ $totalJubilados }}</span></p>
     </div>
 
     <!-- Tabla -->
 
 
     <!-- Tabla    project://resources\views\futurojubilado\table_principal.blade.php  -->
-    @include('futurojubilado.table_principal')
+    @include('futurojubilado.table_principal_bajas')
     <!-- Tabla    project://resources\views\futurojubilado\table_principal.blade.php  -->
 
 
@@ -644,25 +549,25 @@
 @endsection
 
 @once
-@push('scripts')
+        @push('scripts')
+    
+        <script>
+        // Evento al hacer clic en el botón de exportar
+        $('#export-button-alcanzan-edad').on('click', function() {
+            var dateRange = $('.daterangepicker-field').data('daterangepicker');
 
-<script>
-    // Evento al hacer clic en el botón de exportar
-    $('#export-button-alcanzan-edad').on('click', function() {
-        var dateRange = $('.daterangepicker-field').data('daterangepicker');
-
-        var startDate = dateRange.startDate.format('DD-MM-YYYY');
-        console.log(startDate);
-        var endDate = dateRange.endDate.format('DD-MM-YYYY');
+            var startDate = dateRange.startDate.format('DD-MM-YYYY');
+            console.log(startDate);
+            var endDate = dateRange.endDate.format('DD-MM-YYYY');
 
 
-        var apiUrl = SERVER_NODE + '/alcanzan_edad_fechas/' + startDate + '/' + endDate;
+            var apiUrl = SERVER_NODE + '/alcanzan_edad_fechas/' + startDate + '/' + endDate;
 
-        var fileName = 'Personas_que_alcanzan_edad_jubilatoria' + startDate + '_' + endDate + '.xlsx';
-        console.log(apiUrl);
-        exportToExcel(apiUrl, fileName);
-    });
-</script>
-
-@endpush
+            var fileName = 'Personas_que_alcanzan_edad_jubilatoria' + startDate + '_' + endDate + '.xlsx';
+            console.log(apiUrl);
+            exportToExcel(apiUrl, fileName);
+        });
+        </script>
+        
+        @endpush
 @endonce
