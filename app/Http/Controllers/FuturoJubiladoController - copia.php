@@ -25,7 +25,10 @@ class FuturoJubiladoController extends Controller
         $titulo = '';
         
         $etiqueta = $request->input('etiqueta');
+        $oficina  = $request->input('oficina');
         $unidad  = $request->input('unidad');
+
+        //dump($oficina);
 
         $usuario = $request->input('usuario');
         
@@ -37,17 +40,53 @@ class FuturoJubiladoController extends Controller
 
         $maxPeriodo = FuturoJubilado::max('PERIODO'); // Obtener el último perido trabajado
         
+        $mostrarjubilados = $request->input('mostrarjubilados');
+        
 
-        $query = FuturoJubilado::where('PERIODO', $maxPeriodo);
+        if ( $mostrarjubilados )
+        {
+            // $query = FuturoJubilado::query();     
+            //$query = FuturoJubilado::where('PERIODO','<', $maxPeriodo);       
+            $query = FuturoJubilado::where('PERIODO', $maxPeriodo);                        
 
+        }
+        else
+        {
+            $query = FuturoJubilado::where('PERIODO', $maxPeriodo);
+        }
 
         // Si se usa la Jurisdicción    
         if ($etiqueta) {
 
-            if( $unidad )
+                //dump('etiqueta');
+            if ($oficina) {
+
+                $titulo = $titulo.' oficina '.$oficina ;     
+                
+                // Paso 1: Obtener los valores de m4user desde la tabla personas
+                $m4users = DB::table('personas')
+                            ->distinct()
+                            ->where('oficina', $oficina)
+                            ->pluck('m4user');  // Esto devuelve una colección con los valores de m4user
+                
+                // Paso 2: Envolver cada valor de m4users en comillas simples
+                $m4usersList = $m4users->map(function($user) {
+                    return "'{$user}'";  // Envolver cada valor en comillas simples
+                })->implode(',');        
+
+                // Paso 3: Crear la consulta base sin ejecutarla
+                $query->whereIn('id_secuser', $m4users);  // No ejecutar aún, solo define la base de la consulta                
+              
+    
+            }   
+             elseif( $unidad )
             {
+                //dump('unidad');
                 $titulo = $titulo.' unidad organizativa '.$unidad ;  
+                //dump($titulo);
+
                 $query->where('descripcionuor', $unidad);                
+
             }
             
             else 
@@ -56,11 +95,37 @@ class FuturoJubiladoController extends Controller
                 $titulo = $titulo.$etiqueta;
 
             }
+
         }
+
+
+        //Este era el filtro de USUARIO
+        // if ($usuario) {
+        //     $query->where('id_secuser', $usuario);
+        //     $titulo = $titulo.' Usuario '.$usuario;
+        // }
+
+        $oficinas = Persona::select(DB::raw('CONCAT(m4user, " [ ", oficina, " ]") AS oficina'))
+        ->get();   
+
+        if ($etiqueta) {
+
+            $oficinas = Persona::select(DB::raw('oficina'))
+            ->where('etiqueta', $etiqueta )                      
+            ->distinct( )                      
+            ->orderBy('oficina')            
+            ->get();               
+
+        }        
+
+            
+
+
 
         if ($regimen) {
 
             $titulo = $titulo.' Regimen '.$regimen ;
+
             $regimen = substr( " ".$regimen, -2)  ;
             $query->where(DB::raw('LEFT( RIGHT( CONCAT(" ", rats) , 7), 2)'), $regimen);
         }
@@ -69,6 +134,8 @@ class FuturoJubiladoController extends Controller
             $titulo = $titulo.' Genero '.$genero ;            
             $query->where('genero', $genero);
         }
+
+
 
         if ($estado )
         {  
@@ -103,13 +170,25 @@ class FuturoJubiladoController extends Controller
 
         // ACA EFECTUA LA CONSULTA FILTRADA DE FUTUROS JUBILADOS
         $futurosjubilados = $query->orderBy('fecha_actualiza','desc')->get();
+        
         $totalJubilados = $futurosjubilados->count();
 
 
         // LISTAS DE FILTROS        
 
         $etiquetas = FuturoJubilado::select('etiqueta')->distinct()->orderBy('etiqueta')->get();
- 
+
+        // $usuarios  = FuturoJubilado::select('id_secuser as usuario')
+        //     ->where('id_secuser', '!=', '')
+        //     ->distinct()
+        //     ->orderBy('id_secuser')->get();
+
+
+        //$usuarios  = Persona::select('CONCAT( m4user ," [ ",  etiqueta,  " ] " ) AS usuario')
+          //              ->orderBy('m4user')->get();            
+
+        //   $usuarios = Persona::select(DB::raw('CONCAT(m4user, " [ ", etiqueta, " ]") AS usuario'))
+        //   ->orderBy('usuario')->get();     
 
         //FILTRO POR USUARIOS
         if ($etiqueta) {
@@ -135,11 +214,14 @@ class FuturoJubiladoController extends Controller
                 ->where('etiqueta', $etiqueta)
                 ->distinct()
                 ->orderBy('descripcionuor')->get();            
-                   
+                //dd( $usuarios->toArray() ) ;                     
         } else {
             // Si no hay etiqueta, simplemente selecciona los usuarios sin filtro
             $unidades = FuturoJubilado::select('descripcionuor as unidad')->distinct()->orderBy('descripcionuor')->get();
         }        
+
+ 
+
 
         $generos   = FuturoJubilado::select('genero')->distinct()->orderBy('genero')->get();
 
@@ -163,7 +245,8 @@ class FuturoJubiladoController extends Controller
         ")
         ->get();        
 
-           ;
+
+        //dd($futurosjubilados)            ;
         if ($request->has('export_excel')) {
             return Excel::download(new FuturosJubiladosExport($futurosjubilados, $titulo),
              'futuros_jubilados '.$titulo.'.xlsx');
@@ -176,10 +259,12 @@ class FuturoJubiladoController extends Controller
                 'futurosjubilados', 
                 'totalJubilados', 
                 'etiquetas', 
+                'oficinas', 
                 'usuarios', 
                 'estados', 
                 'regimenes', 
                 'generos',
+                'mostrarjubilados',
                 'maxPeriodo',
                 'unidades'
             )
@@ -447,7 +532,6 @@ class FuturoJubiladoController extends Controller
         $etiqueta = $request->input('etiqueta');
         $unidad  = $request->input('unidad');
         $usuario = $request->input('usuario');
-        $periodo = $request->input('periodo');
         
         $estado = $request->input('estado');
         $regimen = $request->input('regimen');
@@ -457,28 +541,16 @@ class FuturoJubiladoController extends Controller
 
         $maxPeriodo = FuturoJubilado::max('PERIODO'); // Obtener el último perido trabajado
         
+        
 
         //INICIALIZO LA CONSULTA CON AQUELLOS QUE SU ULTIMO REGISTRO ESTA EN UN PERIODO ANTERIOR
-        $query = FuturoJubilado::where('PERIODO','<', $maxPeriodo);    
-        
-        // Si se usa la Jurisdicción    
-        if ($etiqueta) {
-
-            if( $unidad )
-            {
-                $titulo = $titulo.' unidad organizativa '.$unidad ;  
-                $query->where('descripcionuor', $unidad);                
-            }
-            
-            else 
-            {
-                $query->where('etiqueta', $etiqueta);
-                $titulo = $titulo.$etiqueta;
-
-            }
-        }        
+        $query = FuturoJubilado::where('PERIODO','<', $maxPeriodo);                   
  
 
+        if ($etiqueta) {
+            $query->where('etiqueta', $etiqueta);
+            $titulo = $titulo.$etiqueta;
+        }
 
         if ($regimen) {
 
@@ -487,13 +559,6 @@ class FuturoJubiladoController extends Controller
             $regimen = substr( " ".$regimen, -2)  ;
             $query->where(DB::raw('LEFT( RIGHT( CONCAT(" ", rats) , 7), 2)'), $regimen);
         }
-
-        if ($periodo) {
-            $titulo = $titulo.' Mes '.$periodo ;
-            $query->where(DB::raw('periodo'), $periodo);
-        }
-
-
 
         if ($genero) {
             $titulo = $titulo.' Genero '.$genero ;            
@@ -560,32 +625,13 @@ class FuturoJubiladoController extends Controller
           ->get();     
         }
         
-         //FILTRO POR USUARIOS
-         if ($etiqueta) {
-            // Si hay una etiqueta seleccionada, filtra por esa etiqueta
-            $unidades = FuturoJubilado::select('descripcionuor as unidad')
-                ->where('etiqueta', $etiqueta)
-                ->distinct()
-                ->orderBy('descripcionuor')->get();            
-                   
-        } else {
-            // Si no hay etiqueta, simplemente selecciona los usuarios sin filtro
-            $unidades = FuturoJubilado::select('descripcionuor as unidad')->distinct()->orderBy('descripcionuor')->get();
-        }        
-
-
+ 
         $generos   = FuturoJubilado::select('genero')->distinct()->orderBy('genero')->get();
 
         $regimenes = FuturoJubilado::select(DB::raw('LEFT( RIGHT( CONCAT(" ", rats) , 7), 2) as regimen') )
             ->distinct()
             ->orderBy('regimen')
             ->get();
-
-        $meses = FuturoJubilado::select('periodo')
-                ->where('PERIODO', '<', $maxPeriodo)
-                ->distinct()
-                ->orderBy('periodo')
-                ->get();    
 
         
         $estados = FuturoJubilado::select('last_cod_jub', 'last_cod_jub_desc')
@@ -621,9 +667,7 @@ class FuturoJubiladoController extends Controller
                 'estados', 
                 'regimenes', 
                 'generos',
-                'maxPeriodo',
-                'unidades',                
-                'meses'                
+                'maxPeriodo'
             )
         );
     }

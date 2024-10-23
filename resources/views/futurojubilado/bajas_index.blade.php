@@ -75,11 +75,11 @@
 
 
 
-    <form method="GET" action="{{ route('futurojubilado.index') }}">
+    <form method="GET" action="{{ route('bajas.index') }}">
 
 
         <div class="row">
-            <div class="col-md-4 form-group">
+            <div class="col-md-3 form-group">
                 <label for="etiqueta">Selecciona una Jurisdicción:</label>
                 <select id="etiqueta" name="etiqueta" class="form-control" onchange="this.form.submit()">
                     <option value="">Todas</option>
@@ -91,24 +91,29 @@
                 </select>
             </div>
 
-            <div class="col-md-4 form-group">
-                <label for="estado">Selecciona un estado de trámite:</label>
-                <select id="estado" name="estado" class="form-control" onchange="this.form.submit()">
-                    <option value="">Todos los estados</option>
-                    <option value="STI">Sin trámites iniciados</option>
-                    @foreach ($estados as $estado)
-                    <option value="{{ $estado->last_cod_jub }}" {{ request('estado') == $estado->last_cod_jub ? 'selected' : '' }}>
-                        {{ $estado->last_cod_jub }} {{ $estado->last_cod_jub_desc }}
+            <div class="col-md-3 form-group">
+                <label for="unidad">Unidades Organizativas:</label>
+                <select id="unidad" name="unidad" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todas</option>
+                    @foreach ($unidades as $unidad)
+                    <option value="{{ $unidad->unidad}}" {{ request('unidad') == $unidad->unidad ? 'selected' : '' }}>
+                        {{ $unidad->unidad }}
                     </option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="col-md-4 form-group">
-                <label for="search">Buscar persona:</label>
-                <input type="text" id="search" name="search" class="form-control" value="{{ request('search') }}" placeholder="Buscar por nombre o CUIL">
+            <div class="col-md-3 form-group">
+                <label for="periodo">Bajas del mes:</label>
+                <select id="periodo" name="periodo" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    @foreach ($meses as $mes)
+                    <option value="{{ $mes->periodo }}" {{ request('periodo') == $mes->periodo ? 'selected' : '' }}>
+                        {{ $mes->periodo }}
+                    </option>
+                    @endforeach
+                </select>
             </div>
-
 
 
 
@@ -119,7 +124,23 @@
         <!-- SEGUNDA FILA -->
 
         <div class="row">
-            <div class="col-md-4 form-group">
+
+            <!-- <div class="col-md-3 form-group">
+                <label for="estado">Selecciona un estado de trámite:</label>
+                <select id="estado" name="estado" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todos los estados</option>
+                    <option value="STI">Sin trámites iniciados</option>
+                    @foreach ($estados as $estado)
+                    <option value="{{ $estado->last_cod_jub }}" {{ request('estado') == $estado->last_cod_jub ? 'selected' : '' }}>
+                        {{ $estado->last_cod_jub }} {{ $estado->last_cod_jub_desc }}
+                    </option>
+                    @endforeach
+                </select>
+            </div> -->
+
+
+
+            <div class="col-md-3 form-group">
                 <label for="regimen">Selecciona un régimen:</label>
                 <select id="regimen" name="regimen" class="form-control" onchange="this.form.submit()">
                     <option value="">Todos los regímenes</option>
@@ -133,7 +154,7 @@
                 </select>
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-3 form-group">
                 <label for="genero">Selecciona un género:</label>
                 <select id="genero" name="genero" class="form-control" onchange="this.form.submit()">
                     <option value="">Todos</option>
@@ -145,7 +166,7 @@
                 </select>
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-3 form-group">
                 <label for="comment">Filtro por observaciones:</label>
                 <select id="comment" name="comment" class="form-control" onchange="this.form.submit()">
                     <option value="" {{ request('comment') === '' ? 'selected' : '' }}>Todos</option>
@@ -166,13 +187,24 @@
 
 
         <div class="row">
+
+
+
+            <div class="col-md-3 form-group">
+        
+                <input type="text" id="search" name="search" class="form-control" value="{{ request('search') }}" placeholder="Buscar por nombre o CUIL">
+            </div>
+
+
+
+
             <div class="col-md-7">
                 <!-- Botón para buscar -->
                 <button type="submit" class="btn btn-primary">Buscar</button>
             </div>
             <div class="col-md-3 text-right">
 
- 
+
 
 
             </div>
@@ -223,7 +255,7 @@
     <!-- Espacio para mostrar el mensaje de error si no hay usuario en la URL -->
     <div id="mensaje-error" style="color: red;"></div>
 
- 
+
 
 
 
@@ -549,25 +581,25 @@
 @endsection
 
 @once
-        @push('scripts')
-    
-        <script>
-        // Evento al hacer clic en el botón de exportar
-        $('#export-button-alcanzan-edad').on('click', function() {
-            var dateRange = $('.daterangepicker-field').data('daterangepicker');
+@push('scripts')
 
-            var startDate = dateRange.startDate.format('DD-MM-YYYY');
-            console.log(startDate);
-            var endDate = dateRange.endDate.format('DD-MM-YYYY');
+<script>
+    // Evento al hacer clic en el botón de exportar
+    $('#export-button-alcanzan-edad').on('click', function() {
+        var dateRange = $('.daterangepicker-field').data('daterangepicker');
+
+        var startDate = dateRange.startDate.format('DD-MM-YYYY');
+        console.log(startDate);
+        var endDate = dateRange.endDate.format('DD-MM-YYYY');
 
 
-            var apiUrl = SERVER_NODE + '/alcanzan_edad_fechas/' + startDate + '/' + endDate;
+        var apiUrl = SERVER_NODE + '/alcanzan_edad_fechas/' + startDate + '/' + endDate;
 
-            var fileName = 'Personas_que_alcanzan_edad_jubilatoria' + startDate + '_' + endDate + '.xlsx';
-            console.log(apiUrl);
-            exportToExcel(apiUrl, fileName);
-        });
-        </script>
-        
-        @endpush
+        var fileName = 'Personas_que_alcanzan_edad_jubilatoria' + startDate + '_' + endDate + '.xlsx';
+        console.log(apiUrl);
+        exportToExcel(apiUrl, fileName);
+    });
+</script>
+
+@endpush
 @endonce

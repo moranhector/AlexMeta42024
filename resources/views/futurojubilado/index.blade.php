@@ -99,17 +99,6 @@
 
             <!-- primer formulario -->
 
-            <div class="col-md-3 form-group">
-                <label for="oficina">Oficinas:</label>
-                <select id="oficina" name="oficina" class="form-control" onchange="this.form.submit()">
-                    <option value="">Todos las oficinas</option>
-                    @foreach ($oficinas as $oficina)
-                    <option value="{{ $oficina->oficina }}" {{ request('oficina') == $oficina->oficina ? 'selected' : '' }}>
-                        {{ $oficina->oficina }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
 
             <div class="col-md-3 form-group">
                 <label for="unidad">Unidades Organizativas:</label>
@@ -125,7 +114,21 @@
 
 
 
-            <div class="col-md-3 form-group">
+
+
+
+
+
+
+
+        </div>
+
+
+        <!-- SEGUNDA FILA -->
+
+        <div class="row">
+
+        <div class="col-md-3 form-group">
                 <label for="estado">Selecciona un estado de trámite:</label>
                 <select id="estado" name="estado" class="form-control" onchange="this.form.submit()">
                     <option value="">Todos los estados</option>
@@ -139,17 +142,7 @@
             </div>
 
 
-
-
-
-
-        </div>
-
-
-        <!-- SEGUNDA FILA -->
-
-        <div class="row">
-            <div class="col-md-4 form-group">
+            <div class="col-md-3 form-group">
                 <label for="regimen">Selecciona un régimen:</label>
                 <select id="regimen" name="regimen" class="form-control" onchange="this.form.submit()">
                     <option value="">Todos los regímenes</option>
@@ -163,7 +156,7 @@
                 </select>
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-3 form-group">
                 <label for="genero">Selecciona un género:</label>
                 <select id="genero" name="genero" class="form-control" onchange="this.form.submit()">
                     <option value="">Todos</option>
@@ -175,7 +168,7 @@
                 </select>
             </div>
 
-            <div class="col-md-4 form-group">
+            <div class="col-md-3 form-group">
                 <label for="comment">Filtro por observaciones:</label>
                 <select id="comment" name="comment" class="form-control" onchange="this.form.submit()">
                     <option value="" {{ request('comment') === '' ? 'selected' : '' }}>Todos</option>
@@ -212,11 +205,7 @@
             <div class="col-md-3 text-right">
 
 
-                <!-- <label>
-                    <input type="checkbox" id="mostrarjubilados" name="mostrarjubilados" onchange="this.form.submit()" {{ $mostrarjubilados ? 'checked' : '' }}>
-                    Mostrar Jubilados
-                </label> -->
-
+ 
 
             </div>
 
